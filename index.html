@@ -1,0 +1,1141 @@
+```html
+<!-- ... existing code ... -->
+          <div class="flex items-center gap-2">
+            <h1 class="text-base font-extrabold tracking-tight text-white leading-none">TØMRER<span class="text-amber-500">PRO</span></h1>
+            <span class="text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded bg-zinc-800 text-amber-400 border border-zinc-700">MM</span>
+          </div>
+          <p id="active-module-subtitle" class="text-xs text-zinc-400 font-medium mt-0.5">Gulv, Troldtekt & Loftplader</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+<!-- ... existing code ... -->
+  <!-- HOVEDINDHOLD -->
+  <main class="flex-1 max-w-xl w-full mx-auto px-3.5 pt-3 main-scroll-area">
+
+    <!-- ==========================================
+         MODUL 1: GULV, TROLDTEKT & PLADER (1D + 2D FORBANDT)
+         ========================================== -->
+    <section id="tab-gulv" class="module-section space-y-4">
+      
+      <!-- Hurtige forudindstillinger til både Gulv, Troldtekt og Plader -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+        <span class="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 mr-1 shrink-0">Materiale:</span>
+        <button onclick="setFloorPreset('floor', 190, 2400, 10, 50)" class="shrink-0 text-xs font-medium bg-tool-card border border-tool-border px-2.5 py-1.5 rounded-lg text-zinc-300 active:bg-amber-500 active:text-zinc-950">Plankegulv (190)</button>
+        <button onclick="setFloorPreset('floor', 138, 2000, 10, 50)" class="shrink-0 text-xs font-medium bg-tool-card border border-tool-border px-2.5 py-1.5 rounded-lg text-zinc-300 active:bg-amber-500 active:text-zinc-950">Laminat (138)</button>
+        <button onclick="setFloorPreset('troldtekt', 600, 1200, 0, 150)" class="shrink-0 text-xs font-semibold bg-amber-500/15 border border-amber-500/40 px-2.5 py-1.5 rounded-lg text-amber-300 active:bg-amber-500 active:text-zinc-950">Troldtekt 600×1200</button>
+        <button onclick="setFloorPreset('troldtekt', 600, 2400, 0, 200)" class="shrink-0 text-xs font-semibold bg-amber-500/15 border border-amber-500/40 px-2.5 py-1.5 rounded-lg text-amber-300 active:bg-amber-500 active:text-zinc-950">Troldtekt 600×2400</button>
+        <button onclick="setFloorPreset('panel', 900, 2400, 0, 150)" class="shrink-0 text-xs font-medium bg-tool-card border border-tool-border px-2.5 py-1.5 rounded-lg text-zinc-300 active:bg-amber-500 active:text-zinc-950">Loftgips (900)</button>
+        <button onclick="setFloorPreset('panel', 1200, 2400, 0, 200)" class="shrink-0 text-xs font-medium bg-tool-card border border-tool-border px-2.5 py-1.5 rounded-lg text-zinc-300 active:bg-amber-500 active:text-zinc-950">Plade (1200×2400)</button>
+      </div>
+
+      <!-- Skift mellem 1D (Bredde / Rækker) og 2D (Loft / Plader i begge retninger inkl. forbandt) -->
+      <div class="bg-tool-card border border-tool-border rounded-2xl p-3.5 shadow-lg space-y-3">
+        <div class="grid grid-cols-2 gap-1.5 bg-zinc-900 p-1 rounded-xl border border-tool-border">
+          <button id="floor-mode-1d" onclick="setFloorDimMode('1d')" class="py-2 px-2 rounded-lg text-xs font-bold bg-amber-500 text-zinc-950 transition">
+            1D: Gulv / Rækkebredde
+          </button>
+          <button id="floor-mode-2d" onclick="setFloorDimMode('2d')" class="py-2 px-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition">
+            2D: Troldtekt / Loftplader
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <!-- Rummets bredde (På tværs af brædder/plader) -->
+          <div class="col-span-2 sm:col-span-1">
+            <label class="block text-xs font-semibold text-zinc-400 mb-1">Rum-bredde (Tværs på rækker)</label>
+            <div class="flex items-center bg-tool-input border border-tool-border rounded-xl focus-within:border-amber-500 overflow-hidden">
+              <button onclick="stepVal('floor-room', -10)" class="px-3 py-3 text-zinc-400 active:bg-zinc-700 font-mono font-bold text-base">−</button>
+              <input id="floor-room" type="number" inputmode="decimal" value="3850" oninput="calcFloor()" class="w-full bg-transparent text-center font-mono text-lg font-bold text-white focus:outline-none">
+              <span class="text-xs font-mono text-zinc-400 pr-1">mm</span>
+              <button onclick="stepVal('floor-room', 10)" class="px-3 py-3 text-amber-400 active:bg-zinc-700 font-mono font-bold text-base">+</button>
+            </div>
+          </div>
+
+          <!-- Bræt / Plade bredde -->
+          <div class="col-span-2 sm:col-span-1">
+            <label class="block text-xs font-semibold text-zinc-400 mb-1">Bræt- / Pladebredde</label>
+            <div class="flex items-center bg-tool-input border border-tool-border rounded-xl focus-within:border-amber-500 overflow-hidden">
+              <button onclick="stepVal('floor-board', -5)" class="px-3 py-3 text-zinc-400 active:bg-zinc-700 font-mono font-bold text-base">−</button>
+              <input id="floor-board" type="number" inputmode="decimal" value="600" oninput="calcFloor()" class="w-full bg-transparent text-center font-mono text-lg font-bold text-amber-400 focus:outline-none">
+              <span class="text-xs font-mono text-zinc-400 pr-1">mm</span>
+              <button onclick="stepVal('floor-board', 5)" class="px-3 py-3 text-amber-400 active:bg-zinc-700 font-mono font-bold text-base">+</button>
+            </div>
+          </div>
+
+          <!-- Luft til væg pr. side -->
+          <div>
+            <label class="block text-xs font-semibold text-zinc-400 mb-1">Luft ved væg (pr. side)</label>
+            <div class="flex items-center bg-tool-input border border-tool-border rounded-xl focus-within:border-amber-500 overflow-hidden">
+              <button onclick="stepVal('floor-gap', -1)" class="px-2.5 py-2.5 text-zinc-400 active:bg-zinc-700 font-mono font-bold">−</button>
+              <input id="floor-gap" type="number" inputmode="decimal" value="0" oninput="calcFloor()" class="w-full bg-transparent text-center font-mono text-base font-bold text-white focus:outline-none">
+              <span class="text-[11px] font-mono text-zinc-400 pr-1">mm</span>
+              <button onclick="stepVal('floor-gap', 1)" class="px-2.5 py-2.5 text-amber-400 active:bg-zinc-700 font-mono font-bold">+</button>
+            </div>
+          </div>
+
+          <!-- Minimum tilladt kantbredde -->
+          <div>
+            <label class="block text-xs font-semibold text-zinc-400 mb-1">Min. starter/slutter</label>
+            <div class="flex items-center bg-tool-input border border-tool-border rounded-xl focus-within:border-amber-500 overflow-hidden">
+              <button onclick="stepVal('floor-min', -10)" class="px-2.5 py-2.5 text-zinc-400 active:bg-zinc-700 font-mono font-bold">−</button>
+              <input id="floor-min" type="number" inputmode="decimal" value="150" oninput="calcFloor()" class="w-full bg-transparent text-center font-mono text-base font-bold text-white focus:outline-none">
+              <span class="text-[11px] font-mono text-zinc-400 pr-1">mm</span>
+              <button onclick="stepVal('floor-min', 10)" class="px-2.5 py-2.5 text-amber-400 active:bg-zinc-700 font-mono font-bold">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2D Ekstra felter til Troldtekt / Loftplader på langs -->
+        <div id="floor-2d-fields" class="hidden pt-3 border-t border-zinc-800 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Længderetning & Forbandt (Troldtekt/Plader)</span>
+            <div class="inline-flex rounded-lg bg-zinc-900 p-0.5 border border-zinc-800">
+              <button id="bond-stagger-btn" onclick="setFloorBond('stagger')" class="px-2 py-1 rounded-md text-[11px] font-bold bg-amber-500 text-zinc-950">1/2 Forbandt</button>
+              <button id="bond-straight-btn" onclick="setFloorBond('straight')" class="px-2 py-1 rounded-md text-[11px] font-bold text-zinc-400">Lige samlinger</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-zinc-400 mb-1">Rum-længde (På langs)</label>
+              <div class="flex items-center bg-tool-input border border-tool-border rounded-xl focus-within:border-amber-500 overflow-hidden">
+                <button onclick="stepVal('floor-room-len', -50)" class="px-2.5 py-2.5 text-zinc-400 active:bg-zinc-700 font-mono font-bold">−</button>
+                <input id="floor-room-len" type="number" inputmode="decimal" value="5200" oninput="calcFloor()" class="w-full bg-transparent text-center font-mono text-base font-bold text-white focus:outline-none">
+                <span class="text-[11px] font-mono text-zinc-400 pr-1">mm</span>
+                <button onclick="stepVal('floor-room-len', 50)" class="px-2.5 py-2.5 text-amber-400 active:bg-zinc-700 font-mono font-bold">+</button>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-zinc-400 mb-1">Pladelængde</label>
+              <div class="flex items-center bg-tool-input border border-tool-border rounded-xl focus-within:border-amber-500 overflow-hidden">
+                <button onclick="stepVal('floor-board-len', -100)" class="px-2.5 py-2.5 text-zinc-400 active:bg-zinc-700 font-mono font-bold">−</button>
+                <input id="floor-board-len" type="number" inputmode="decimal" value="1200" oninput="calcFloor()" class="w-full bg-transparent text-center font-mono text-base font-bold text-amber-400 focus:outline-none">
+                <span class="text-[11px] font-mono text-zinc-400 pr-1">mm</span>
+                <button onclick="stepVal('floor-board-len', 100)" class="px-2.5 py-2.5 text-amber-400 active:bg-zinc-700 font-mono font-bold">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hovedresultat: Symmetrisk Starter & Slutter -->
+      <div class="bg-gradient-to-br from-amber-500/15 via-tool-card to-tool-card border-2 border-amber-500/70 rounded-2xl p-4 shadow-xl">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+            Symmetrisk Opdeling (Lige store kanter)
+          </span>
+          <button onclick="copyFloorResult()" class="text-xs font-semibold text-zinc-300 bg-zinc-800/90 hover:bg-zinc-700 px-2.5 py-1 rounded-lg border border-zinc-700 active:scale-95">
+            Kopiér mål
+          </button>
+        </div>
+
+        <!-- Bredde-inddeling (Rækker) -->
+        <div class="grid grid-cols-2 gap-3 my-2">
+          <div class="bg-zinc-900/90 border border-zinc-800 rounded-xl p-3">
+            <span class="text-xs text-zinc-400 block">Starter & Slutter (Bredde):</span>
+            <div class="flex items-baseline gap-1 mt-0.5">
+              <span id="floor-sym-edge" class="font-mono text-3xl font-extrabold text-amber-400">425,0</span>
+              <span class="font-mono text-sm font-bold text-zinc-400">mm</span>
+            </div>
+            <span id="floor-sym-note" class="text-[11px] text-emerald-400 font-medium block mt-1">✓ Overholder min. 150 mm</span>
+          </div>
+
+          <div class="bg-zinc-900/90 border border-zinc-800 rounded-xl p-3">
+            <span class="text-xs text-zinc-400 block">Hele rækker i midten:</span>
+            <div class="flex items-baseline gap-1 mt-0.5">
+              <span id="floor-sym-full" class="font-mono text-3xl font-extrabold text-white">5</span>
+              <span class="font-mono text-sm font-bold text-zinc-400">rækker</span>
+            </div>
+            <span id="floor-sym-total-rows" class="text-[11px] text-zinc-400 font-medium block mt-1">7 rækker i alt inkl. starter/slutter</span>
+          </div>
+        </div>
+
+        <!-- 2D Længde-inddeling (Kun synlig i 2D Troldtekt/Loft mode) -->
+        <div id="floor-2d-results" class="hidden mt-3 pt-3 border-t border-zinc-800/90 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">På langs af rækkerne (Længde-inddeling)</span>
+            <span id="floor-2d-forskalling-cc" class="text-[11px] font-mono text-zinc-300 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">Forskalling C-C: 600 mm</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5">
+            <div class="bg-zinc-900/90 border border-emerald-500/30 rounded-xl p-2.5">
+              <span class="text-[11px] text-zinc-400 block">Række 1, 3, 5 (Lige rækker):</span>
+              <span id="floor-2d-rowA" class="font-mono text-base font-extrabold text-emerald-400 block mt-0.5">Start/Slut: 800 mm</span>
+              <span id="floor-2d-rowA-sub" class="text-[11px] text-zinc-400 block">3 hele plader (1200 mm) i midten</span>
+            </div>
+            <div class="bg-zinc-900/90 border border-amber-500/30 rounded-xl p-2.5">
+              <span class="text-[11px] text-zinc-400 block">Række 2, 4, 6 (Forskudt 1/2):</span>
+              <span id="floor-2d-rowB" class="font-mono text-base font-extrabold text-amber-400 block mt-0.5">Start/Slut: 200 mm</span>
+              <span id="floor-2d-rowB-sub" class="text-[11px] text-zinc-400 block">4 hele plader (1200 mm) i midten</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visuel SVG Skitse -->
+        <div class="mt-3 bg-zinc-950/90 border border-zinc-800/90 rounded-xl p-3">
+          <div class="flex justify-between items-center text-[11px] text-zinc-400 font-mono mb-1.5">
+            <span id="floor-svg-left-label">Væg + 0 mm luft</span>
+            <span id="floor-svg-net-label">Effektiv bredde: 3850 mm</span>
+            <span id="floor-svg-right-label">0 mm luft + Væg</span>
+          </div>
+          <div id="floor-svg-container" class="w-full min-h-[5.5rem] flex items-center justify-center">
+            <!-- SVG indsat via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Sammenligning: Hvis man starter med et helt bræt / hel plade -->
+      <div class="bg-tool-card border border-tool-border rounded-2xl p-3.5">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-zinc-400">Sammenligning: Start med 100% hel bredde</h3>
+          <span id="floor-std-badge" class="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-300">Alternativ</span>
+        </div>
+        <div class="grid grid-cols-3 gap-2 text-center bg-zinc-900/60 rounded-xl p-2.5 border border-zinc-800/80">
+          <div>
+            <span class="text-[11px] text-zinc-400 block">Starter (Hel)</span>
+            <span id="floor-std-start" class="font-mono text-base font-bold text-white">600 mm</span>
+          </div>
+          <div class="border-x border-zinc-800">
+            <span class="text-[11px] text-zinc-400 block">Hele rækker</span>
+            <span id="floor-std-count" class="font-mono text-base font-bold text-white">6 stk.</span>
+          </div>
+          <div>
+            <span class="text-[11px] text-zinc-400 block">Slutter ved væg</span>
+            <span id="floor-std-end" class="font-mono text-base font-bold text-amber-400">250,0 mm</span>
+          </div>
+        </div>
+        <p id="floor-std-warning" class="text-xs text-amber-400/90 mt-2 font-medium"></p>
+      </div>
+
+      <!-- Målebånds-afsætning for Rækker / Troldtekt samlinger -->
+      <div class="bg-tool-card border border-tool-border rounded-2xl p-3.5">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-white">Målebånds-afsætning (Tværs over rummet)</h3>
+            <p class="text-[11px] text-zinc-400">Alle samlinger målt fra startvæg (inkl. luft):</p>
+          </div>
+        </div>
+        <div id="floor-tape-list" class="max-h-48 overflow-y-auto custom-scroll divide-y divide-zinc-800/80 bg-zinc-950/60 rounded-xl border border-zinc-800/90 px-3 py-1 font-mono text-xs">
+          <!-- Indsættes via JS -->
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ==========================================
+         MODUL 2: VÆG, REGLAR & GIPS/FERMACELL (NYT!)
+         ========================================== -->
+    <section id="tab-vaeg" class="module-section hidden space-y-4">
+
+      <!-- Hurtige forvalg af pladetype -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+        <span class="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 mr-1 shrink-0">Plade:</span>
+        <button onclick="setWallPreset(900, 450, 50, 200, 'Gips 900 (-50 mm spartelkant)')" class="shrink-0 text-xs font-semibold bg-amber-500/15 border border-amber-500/40 px-2.5 py-1.5 rounded-lg text-amber-300 active:bg-amber-500 active:text-zinc-950">Gips 900 (-50 mm kant)</button>
+        <button onclick="setWallPreset(1200, 600, 50, 200, 'Gips 1200 (-50 mm spartelkant)')" class="shrink-0 text-xs font-semibold bg-amber-500/15 border border-amber-500/40 px-2.5 py-1.5 rounded-lg text-amber-300 active:bg-amber-500 active:text-zinc-950">Gips 1200 (-50 mm kant)</button>
+        <button onclick="setWallPreset(900, 450, 0, 200, 'Fermacell 900 (Retkantet)')" class="shrink-0 text-xs font-medium bg-tool-card border border-tool-border px-2.5 py-1.5 rounded-lg text-zinc-300 active:bg-amber-500 active:text-zinc-950">Fermacell 900 (0 mm)</button>
+        <button onclick="setWallPreset(1200, 600, 0, 200, 'Fermacell / OSB 1200')" class="shrink-0 text-xs font-medium bg-tool-card border border-tool-border px-2.5 py-1.5 rounded-lg text-zinc-300 active:bg-amber-500 active:text-zinc-950">Fermacell / OSB 1200</button>
+        <button onclick="setWallPreset(1220, 610, 0, 200, 'Krydsfiner 1220 (c/c 610)')" class="shrink-0 text-xs font-medium bg-tool-card border border-tool-border px-2.5 py-1.5 rounded-lg text-zinc-300 active:bg-amber-500 active:text-zinc-950">Krydsfiner 1220</button>
+      </div>
+
+      <!-- Input-kort til Væg, Reglar & Plader -->
+      <div class="bg-tool-card border border-tool-border rounded-2xl p-3.5 shadow-lg space-y-3">
+        
+        <div class="grid grid-cols-2 gap-3">
+          <!-- Væggens totallængde -->
+          <div class="col-span-2 sm:col-span-1">
+            <label class="block text-xs font-semibold text-zinc-400 mb-1">Væggens totallængde</label>
+            <div class="flex items-center bg-tool-input border border-tool-border rounded-xl focus-within:border-amber-500 overflow-hidden">
+              <button onclick="stepVal('wall-len', -10)" class="px-3 py-3 text-zinc-400 active:bg-zinc-700 font-mono font-bold text-base">−</button>
+              <input id="wall-len" type="number" inputmode="decimal" value="3650" oninput="calcWall()" class="w-full bg-transparent text-center font-mono text-lg font-bold text-white focus:outline-none">
+              <span class="text-xs font-mono text-zinc-400 pr-1">mm</span>
+              <button onclick="stepVal('wall-len', 10)" class="px-3 py-3 text-amber-400 active:bg-zinc-700 font-mono font-bold text-base">+</button>
+            </div>
+          </div>
+
+          <!-- Pladebredde -->
+          <div class="col-span-2 sm:col-span-1">
+            <label class="block text-xs font-semibold text-zinc-400 mb-1">Pladebredde (Gips/Fermacell)</label>
+            <div class="flex items-center bg-tool-input border border-tool-border rounded-xl focus-within:border-amber-500 overflow-hidden">
+              <button onclick="stepVal('wall-board', -50)" class="px-3 py-3 text-zinc-400 active:bg-zinc-700 font-mono font-bold text-base">−</button>
+              <input id="wall-board" type="number" inputmode="decimal" value="900" oninput="syncStudCCWithBoard(); calcWall()" class="w-full bg-transparent text-center font-mono text-lg font-bold text-amber-400 focus:outline-none">
+              <span class="text-xs font-mono text-zinc-400 pr-1">mm</span>
+              <button onclick="stepVal('wall-board', 50)" class="px-3 py-3 text-amber-400 active:bg-zinc-700 font-mono font-bold text-base">+</button>
+            </div>
+          </div>
+
+          <!-- Reglar / Stolpe C-C afstand -->
+          <div>
+            <label class="block text-xs font-semibold text-zinc-400 mb-1">Regel C-C afstand</label>
+            <div class="flex items-center bg-tool-input border border-tool-border rounded-xl focus-within:border-amber-500 overflow-hidden">
+              <button onclick="stepVal('wall-cc', -50)" class="px-2.5 py-2.5 text-zinc-400 active:bg-zinc-700 font-mono font-bold">−</button>
+              <input id="wall-cc" type="number" inputmode="decimal" value="450" oninput="calcWall()" class="w-full bg-transparent text-center font-mono text-base font-bold text-white focus:outline-none">
+              <span class="text-[11px] font-mono text-zinc-400 pr-1">mm</span>
+              <button onclick="stepVal('wall-cc', 50)" class="px-2.5 py-2.5 text-amber-400 active:bg-zinc-700 font-mono font-bold">+</button>
+            </div>
+          </div>
+
+          <!-- Regeltykkelse (45 mm træ / 70 mm stål) -->
+          <div>
+            <label class="block text-xs font-semibold text-zinc-400 mb-1">Regel-bredde (Træ/Stål)</label>
+            <div class="flex items-center bg-tool-input border border-tool-border rounded-xl focus-within:border-amber-500 overflow-hidden">
+              <button onclick="stepVal('wall-stud-w', -5)" class="px-2.5 py-2.5 text-zinc-400 active:bg-zinc-700 font-mono font-bold">−</button>
+              <input id="wall-stud-w" type="number" inputmode="decimal" value="45" oninput="calcWall()" class="w-full bg-transparent text-center font-mono text-base font-bold text-white focus:outline-none">
+              <span class="text-[11px] font-mono text-zinc-400 pr-1">mm</span>
+              <button onclick="stepVal('wall-stud-w', 5)" class="px-2.5 py-2.5 text-amber-400 active:bg-zinc-700 font-mono font-bold">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Spartelkant-afskæring (50 mm) & Minimum slutter-bredde -->
+        <div class="pt-2 border-t border-zinc-800 grid grid-cols-2 gap-3">
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-xs font-semibold text-amber-400">Skær spartelkant (Start)</label>
+              <button onclick="toggleBevelCut()" id="wall-bevel-toggle" class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-amber-500 text-zinc-950">AKTIV</button>
+            </div>
+            <div class="flex items-center bg-tool-input border border-amber-500/50 rounded-xl focus-within:border-amber-500 overflow-hidden">
+              <button onclick="stepVal('wall-trim', -5)" class="px-2.5 py-2.5 text-zinc-400 active:bg-zinc-700 font-mono font-bold">−</button>
+              <input id="wall-trim" type="number" inputmode="decimal" value="50" oninput="calcWall()" class="w-full bg-transparent text-center font-mono text-base font-bold text-amber-400 focus:outline-none">
+              <span class="text-[11px] font-mono text-zinc-400 pr-1">mm</span>
+              <button onclick="stepVal('wall-trim', 5)" class="px-2.5 py-2.5 text-amber-400 active:bg-zinc-700 font-mono font-bold">+</button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-zinc-400 mb-1">Min. slutter-plade</label>
+            <div class="flex items-center bg-tool-input border border-tool-border rounded-xl focus-within:border-amber-500 overflow-hidden">
+              <button onclick="stepVal('wall-min-end', -25)" class="px-2.5 py-2.5 text-zinc-400 active:bg-zinc-700 font-mono font-bold">−</button>
+              <input id="wall-min-end" type="number" inputmode="decimal" value="200" oninput="calcWall()" class="w-full bg-transparent text-center font-mono text-base font-bold text-white focus:outline-none">
+              <span class="text-[11px] font-mono text-zinc-400 pr-1">mm</span>
+              <button onclick="stepVal('wall-min-end', 25)" class="px-2.5 py-2.5 text-amber-400 active:bg-zinc-700 font-mono font-bold">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vælg Opdelings-strategi -->
+        <div class="pt-2 border-t border-zinc-800">
+          <label class="block text-xs font-semibold text-zinc-400 mb-1.5">Vælg plade- og regel-opdeling:</label>
+          <div class="grid grid-cols-2 gap-1.5 bg-zinc-900 p-1 rounded-xl border border-tool-border">
+            <button id="wall-strat-std" onclick="setWallStrategy('standard')" class="py-2 px-2 rounded-lg text-xs font-bold bg-amber-500 text-zinc-950 transition">
+              Standard (Start minus kant)
+            </button>
+            <button id="wall-strat-sym" onclick="setWallStrategy('sym')" class="py-2 px-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition">
+              Optimeret / Symmetrisk
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resultat-kort for Væg, Plader & Reglar -->
+      <div class="bg-gradient-to-br from-amber-500/15 via-tool-card to-tool-card border-2 border-amber-500/70 rounded-2xl p-4 shadow-xl space-y-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <span id="wall-active-badge" class="text-xs font-extrabold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+              Plade- & Regel-opdeling
+            </span>
+          </div>
+          <button onclick="copyWallStudList()" class="text-xs font-semibold text-zinc-300 bg-zinc-800/90 hover:bg-zinc-700 px-2.5 py-1 rounded-lg border border-zinc-700 active:scale-95">
+            Kopiér reglar
+          </button>
+        </div>
+
+        <!-- Advarselsboks hvis slutter bliver for smal i Standard-mode -->
+        <div id="wall-narrow-alert" class="hidden bg-amber-500/20 border border-amber-400 rounded-xl p-3 flex items-center justify-between gap-2">
+          <div class="text-xs text-amber-200">
+            <strong class="text-amber-400 block">⚠️ Slutter-pladen bliver for smal!</strong>
+            <span id="wall-narrow-alert-text">Med standard opstart bliver slutteren kun 100 mm.</span>
+          </div>
+          <button onclick="setWallStrategy('sym')" class="shrink-0 bg-amber-500 text-zinc-950 font-extrabold text-xs px-3 py-2 rounded-lg shadow active:scale-95">
+            Brug Optimeret
+          </button>
+        </div>
+
+        <!-- 3 nøgletal: 1. Plade (Starter), Hele plader, Slutter-plade -->
+        <div class="grid grid-cols-3 gap-2.5">
+          <div class="bg-zinc-900/90 border border-zinc-800 rounded-xl p-2.5">
+            <span class="text-[11px] text-zinc-400 block">1. Plade (Starter)</span>
+            <div class="flex items-baseline gap-0.5 mt-0.5">
+              <span id="wall-res-start" class="font-mono text-2xl font-extrabold text-amber-400">850</span>
+              <span class="font-mono text-xs text-zinc-400">mm</span>
+            </div>
+            <span id="wall-res-start-sub" class="text-[10px] text-zinc-400 block mt-0.5">Skær 50 mm af</span>
+          </div>
+
+          <div class="bg-zinc-900/90 border border-zinc-800 rounded-xl p-2.5 text-center">
+            <span class="text-[11px] text-zinc-400 block">Hele plader</span>
+            <div class="flex items-baseline justify-center gap-0.5 mt-0.5">
+              <span id="wall-res-full" class="font-mono text-2xl font-extrabold text-white">3</span>
+              <span class="font-mono text-xs text-zinc-400">stk.</span>
+            </div>
+            <span id="wall-res-full-sub" class="text-[10px] text-zinc-400 block mt-0.5">á 900 mm</span>
+          </div>
+
+          <div class="bg-zinc-900/90 border border-zinc-800 rounded-xl p-2.5">
+            <span class="text-[11px] text-zinc-400 block">Slutter-plade</span>
+            <div class="flex items-baseline gap-0.5 mt-0.5">
+              <span id="wall-res-end" class="font-mono text-2xl font-extrabold text-emerald-400">100</span>
+              <span class="font-mono text-xs text-zinc-400">mm</span>
+            </div>
+            <span id="wall-res-end-sub" class="text-[10px] text-emerald-400 block mt-0.5">Sidste plade</span>
+          </div>
+        </div>
+
+        <!-- Vigtig info om 1. regel og total antal reglar -->
+        <div class="bg-zinc-950/90 border border-zinc-800 rounded-xl p-3 flex items-center justify-between text-xs">
+          <div>
+            <span class="text-zinc-400 block">1. mellem-regel & 1. pladesamling:</span>
+            <span id="wall-first-studs-info" class="font-mono font-bold text-white">Regel #2: 400 mm | Samling #1: 850 mm</span>
+          </div>
+          <div class="text-right">
+            <span class="text-zinc-400 block">Reglar i alt:</span>
+            <span id="wall-total-studs" class="font-mono text-base font-extrabold text-amber-400">10 stk.</span>
+          </div>
+        </div>
+
+        <!-- Visuel SVG af Væg, Reglar & Pladesamlinger -->
+        <div class="bg-zinc-950/90 border border-zinc-800 rounded-xl p-3">
+          <div class="flex justify-between items-center text-[10px] text-zinc-400 font-mono mb-1">
+            <span>0 mm (Start-regel)</span>
+            <span class="text-amber-400">Stiplet = Mellem-regel | Gul = Pladesamling</span>
+            <span id="wall-svg-end-label">3650 mm</span>
+          </div>
+          <div id="wall-svg-container" class="w-full h-28 flex items-center justify-center">
+            <!-- Indsættes via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Komplet Målebånds-afsætningsliste til Reglar på bund-/toprem -->
+      <div class="bg-tool-card border border-tool-border rounded-2xl p-3.5">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-white flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 6v4"/><path d="M10 6v6"/><path d="M14 6v4"/><path d="M18 6v6"/></svg>
+              Målebånds-afsætning af Reglar (Fra 0 mm)
+            </h3>
+            <p class="text-[11px] text-zinc-400">Træk målebåndet ud langs remmen – både Forkant (streg) og Center (C-C):</p>
+          </div>
+        </div>
+
+        <div id="wall-stud-list" class="max-h-64 overflow-y-auto custom-scroll divide-y divide-zinc-800/80 bg-zinc-950/60 rounded-xl border border-zinc-800/90 px-3 py-1 font-mono text-xs">
+          <!-- Indsættes dynamisk -->
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ==========================================
+         MODUL 3: LISTER, BEKLÆDNING & HEGN (C-C & MELLEMRUM)
+         ========================================== -->
+    <section id="tab-lister" class="module-section hidden space-y-4">
+<!-- ... existing code ... -->
+  <!-- IPHONE TAB BAR NAVIGATION I BUNDEN -->
+  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-[#16181D]/95 backdrop-blur-lg border-t border-tool-border pb-safe-nav">
+    <div class="max-w-xl mx-auto grid grid-cols-6 px-1 pt-1.5">
+      
+      <button onclick="switchTab('gulv')" id="nav-gulv" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-amber-400 transition active:scale-95">
+        <svg class="w-5 h-5 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <path d="M8 3v18"/><path d="M16 3v18"/><path d="M3 12h5"/><path d="M16 12h5"/>
+        </svg>
+        <span class="text-[10px] font-bold tracking-tight">Gulv/Loft</span>
+      </button>
+
+      <button onclick="switchTab('vaeg')" id="nav-vaeg" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-zinc-400 hover:text-zinc-200 transition active:scale-95">
+        <svg class="w-5 h-5 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="16" rx="2"/>
+          <line x1="9" y1="4" x2="9" y2="20"/>
+          <line x1="15" y1="4" x2="15" y2="20"/>
+          <line x1="6" y1="8" x2="6" y2="16" stroke-dasharray="2 2"/>
+          <line x1="12" y1="8" x2="12" y2="16" stroke-dasharray="2 2"/>
+        </svg>
+        <span class="text-[10px] font-bold tracking-tight">Væg/Gips</span>
+      </button>
+
+      <button onclick="switchTab('lister')" id="nav-lister" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-zinc-400 hover:text-zinc-200 transition active:scale-95">
+        <svg class="w-5 h-5 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4v16"/><path d="M9 4v16"/><path d="M15 4v16"/><path d="M20 4v16"/>
+        </svg>
+        <span class="text-[10px] font-bold tracking-tight">Lister</span>
+      </button>
+
+      <button onclick="switchTab('spaer')" id="nav-spaer" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-zinc-400 hover:text-zinc-200 transition active:scale-95">
+        <svg class="w-5 h-5 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="3 20 21 20 21 6 3 20"/>
+        </svg>
+        <span class="text-[10px] font-bold tracking-tight">Spær/Tag</span>
+      </button>
+
+      <button onclick="switchTab('laegter')" id="nav-laegter" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-zinc-400 hover:text-zinc-200 transition active:scale-95">
+        <svg class="w-5 h-5 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/><path d="M7 3v18"/><path d="M17 3v18"/>
+        </svg>
+        <span class="text-[10px] font-bold tracking-tight">Lægter</span>
+      </button>
+
+      <button onclick="switchTab('materialer')" id="nav-materialer" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-zinc-400 hover:text-zinc-200 transition active:scale-95">
+        <svg class="w-5 h-5 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
+        </svg>
+        <span class="text-[10px] font-bold tracking-tight">m²/Spild</span>
+      </button>
+
+    </div>
+  </nav>
+
+  <!-- JAVASCRIPT LOGIK -->
+  <script>
+    // Aktuel tilstand
+    let activeTab = 'gulv';
+    let floorDimMode = '1d';    // '1d' | '2d'
+    let floorBondMode = 'stagger'; // 'stagger' (1/2 forbandt) | 'straight'
+    let wallStrategy = 'standard'; // 'standard' | 'sym'
+    let slatEdgeMode = 'board'; // 'board' | 'gap' | 'one'
+    let slatCalcBy = 'gap';     // 'gap' | 'count'
+    let currentSlatCount = 37;
+    let triangleMode = 'run-angle'; // 'run-angle' | 'run-rise' | 'rafter-angle'
+    let currentWastePct = 10;
+<!-- ... existing code ... -->
+    // Skift fane i bunden
+    function switchTab(tabId) {
+      activeTab = tabId;
+      const subtitles = {
+        gulv: 'Gulv, Troldtekt & Loftplader',
+        vaeg: 'Væg, Reglar & Gips / Fermacell',
+        lister: 'Lister, Beklædning & Hegn (C-C)',
+        spaer: 'Spær, Taghældning & Smigvinkler',
+        laegter: 'Lægte- & Strøafstand',
+        materialer: 'Kvadratmeter, Løbende meter & Spild'
+      };
+      document.getElementById('active-module-subtitle').textContent = subtitles[tabId] || '';
+<!-- ... existing code ... -->
+    // Nulstil aktivt modul til standardværdier
+    function resetCurrentModule() {
+      if (activeTab === 'gulv') {
+        document.getElementById('floor-room').value = 3850;
+        document.getElementById('floor-board').value = 600;
+        document.getElementById('floor-gap').value = 0;
+        document.getElementById('floor-min').value = 150;
+        document.getElementById('floor-room-len').value = 5200;
+        document.getElementById('floor-board-len').value = 1200;
+        calcFloor();
+      } else if (activeTab === 'vaeg') {
+        document.getElementById('wall-len').value = 3650;
+        document.getElementById('wall-board').value = 900;
+        document.getElementById('wall-cc').value = 450;
+        document.getElementById('wall-stud-w').value = 45;
+        document.getElementById('wall-trim').value = 50;
+        document.getElementById('wall-min-end').value = 200;
+        setWallStrategy('standard');
+      } else if (activeTab === 'lister') {
+        document.getElementById('slat-total').value = 2400;
+<!-- ... existing code ... -->
+    // =========================================================================
+    // 1. GULV, TROLDTEKT & PLADER (1D + 2D LOFT I FORBANDT)
+    // =========================================================================
+    function setFloorDimMode(mode) {
+      floorDimMode = mode;
+      const btn1d = document.getElementById('floor-mode-1d');
+      const btn2d = document.getElementById('floor-mode-2d');
+      const fields2d = document.getElementById('floor-2d-fields');
+      const res2d = document.getElementById('floor-2d-results');
+
+      if (mode === '2d') {
+        btn2d.className = 'py-2 px-2 rounded-lg text-xs font-bold bg-amber-500 text-zinc-950 transition';
+        btn1d.className = 'py-2 px-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition';
+        fields2d.classList.remove('hidden');
+        res2d.classList.remove('hidden');
+      } else {
+        btn1d.className = 'py-2 px-2 rounded-lg text-xs font-bold bg-amber-500 text-zinc-950 transition';
+        btn2d.className = 'py-2 px-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition';
+        fields2d.classList.add('hidden');
+        res2d.classList.add('hidden');
+      }
+      calcFloor();
+    }
+
+    function setFloorBond(bond) {
+      floorBondMode = bond;
+      const stagBtn = document.getElementById('bond-stagger-btn');
+      const strBtn = document.getElementById('bond-straight-btn');
+      if (bond === 'stagger') {
+        stagBtn.className = 'px-2 py-1 rounded-md text-[11px] font-bold bg-amber-500 text-zinc-950';
+        strBtn.className = 'px-2 py-1 rounded-md text-[11px] font-bold text-zinc-400';
+      } else {
+        strBtn.className = 'px-2 py-1 rounded-md text-[11px] font-bold bg-amber-500 text-zinc-950';
+        stagBtn.className = 'px-2 py-1 rounded-md text-[11px] font-bold text-zinc-400';
+      }
+      calcFloor();
+    }
+
+    function setFloorPreset(type, boardW, boardLen, wallGap, minEdge) {
+      document.getElementById('floor-board').value = boardW;
+      document.getElementById('floor-board-len').value = boardLen;
+      document.getElementById('floor-gap').value = wallGap;
+      document.getElementById('floor-min').value = minEdge;
+      if (type === 'troldtekt') {
+        setFloorDimMode('2d');
+      } else {
+        calcFloor();
+      }
+    }
+
+    // Hjælpefunktion til symmetrisk opdeling på én akse
+    function calcSymmetricAxis(netSpan, unitSize, minEdge) {
+      let fullUnits = Math.floor(netSpan / unitSize);
+      let edgeSize = (netSpan - fullUnits * unitSize) / 2;
+
+      if ((edgeSize < minEdge || edgeSize < 1) && fullUnits > 0) {
+        fullUnits -= 1;
+        edgeSize = (netSpan - fullUnits * unitSize) / 2;
+      }
+      if (edgeSize > unitSize) {
+        fullUnits += 1;
+        edgeSize = (netSpan - fullUnits * unitSize) / 2;
+      }
+      return { fullUnits, edgeSize };
+    }
+
+    function calcFloor() {
+      const roomW = Math.max(0, parseFloat(document.getElementById('floor-room').value) || 0);
+      const boardW = Math.max(1, parseFloat(document.getElementById('floor-board').value) || 1);
+      const wallGap = Math.max(0, parseFloat(document.getElementById('floor-gap').value) || 0);
+      const minEdge = Math.max(0, parseFloat(document.getElementById('floor-min').value) || 0);
+
+      const netWidth = Math.max(0, roomW - 2 * wallGap);
+
+      // Standard opdeling (Start med 100% helt bræt/plade)
+      let stdFullBoards = Math.floor(netWidth / boardW);
+      let stdLastBoard = netWidth - stdFullBoards * boardW;
+      if (stdLastBoard < 0.05 && stdFullBoards > 0) {
+        stdLastBoard = boardW;
+        stdFullBoards -= 1;
+      }
+
+      // Symmetrisk opdeling på tværs (Bredde)
+      const symW = calcSymmetricAxis(netWidth, boardW, minEdge);
+      const symFullBoards = symW.fullUnits;
+      const symEdgeWidth = symW.edgeSize;
+
+      // Opdater UI for Symmetrisk løsning (Bredde)
+      document.getElementById('floor-sym-edge').textContent = fmt(symEdgeWidth, 1);
+      document.getElementById('floor-sym-full').textContent = symFullBoards;
+      document.getElementById('floor-sym-total-rows').textContent = `${symFullBoards + 2} rækker i alt (starter + ${symFullBoards} hele + slutter)`;
+
+      const noteEl = document.getElementById('floor-sym-note');
+      if (symEdgeWidth >= minEdge) {
+        noteEl.textContent = `✓ Overholder min. krav (${fmt(minEdge, 0)} mm)`;
+        noteEl.className = 'text-[11px] text-emerald-400 font-medium block mt-1';
+      } else {
+        noteEl.textContent = `OBS: Under ${fmt(minEdge, 0)} mm (tjek mål)`;
+        noteEl.className = 'text-[11px] text-amber-400 font-medium block mt-1';
+      }
+
+      // Opdater sammenligning med helt startbræt/plade
+      document.getElementById('floor-std-start').textContent = `${fmt(boardW, 0)} mm`;
+      document.getElementById('floor-std-count').textContent = `${stdFullBoards} stk.`;
+      document.getElementById('floor-std-end').textContent = `${fmt(stdLastBoard, 1)} mm`;
+
+      const warnEl = document.getElementById('floor-std-warning');
+      if (stdLastBoard < minEdge) {
+        warnEl.textContent = `⚠️ Ved start med hel bredde bliver slutteren kun ${fmt(stdLastBoard, 1)} mm (under ${fmt(minEdge, 0)} mm!). Symmetrisk start på ${fmt(symEdgeWidth, 1)} mm anbefales.`;
+      } else {
+        warnEl.textContent = `Ved start med hel bredde bliver slutteren ${fmt(stdLastBoard, 1)} mm, mens symmetrisk start giver ${fmt(symEdgeWidth, 1)} mm i begge sider.`;
+      }
+
+      // 2D Længde-beregning (Troldtekt / Loftplader)
+      const roomLen = Math.max(0, parseFloat(document.getElementById('floor-room-len').value) || 0);
+      const boardLen = Math.max(100, parseFloat(document.getElementById('floor-board-len').value) || 1200);
+      const netLen = Math.max(0, roomLen - 2 * wallGap);
+
+      // Række A (Centreret samling eller centreret plade)
+      const rowASym = calcSymmetricAxis(netLen, boardLen, minEdge);
+      // Række B (Forskudt 1/2 pladelængde i forhold til Række A for ægte 1/2-forbandt)
+      let rowBEdge = rowASym.edgeSize - boardLen / 2;
+      let rowBFull = rowASym.fullUnits + 1;
+      if (rowBEdge < minEdge) {
+        rowBEdge = rowASym.edgeSize + boardLen / 2;
+        rowBFull = Math.max(0, rowASym.fullUnits - 1);
+      }
+
+      const forskallingCC = boardLen >= 1200 ? 600 : Math.round(boardLen / 2);
+      document.getElementById('floor-2d-forskalling-cc').textContent = `Forskalling C-C: ${forskallingCC} mm`;
+      document.getElementById('floor-2d-rowA').textContent = `Start/Slut: ${fmt(rowASym.edgeSize, 1)} mm`;
+      document.getElementById('floor-2d-rowA-sub').textContent = `${rowASym.fullUnits} hele plader (${fmt(boardLen, 0)} mm) i midten`;
+
+      if (floorBondMode === 'stagger') {
+        document.getElementById('floor-2d-rowB').textContent = `Start/Slut: ${fmt(rowBEdge, 1)} mm`;
+        document.getElementById('floor-2d-rowB-sub').textContent = `${rowBFull} hele plader (${fmt(boardLen, 0)} mm) i midten`;
+      } else {
+        document.getElementById('floor-2d-rowB').textContent = `Ens med Række 1 (${fmt(rowASym.edgeSize, 1)} mm)`;
+        document.getElementById('floor-2d-rowB-sub').textContent = `Lige gennemgående samlinger`;
+      }
+
+      // Opdater labels, SVG og Målebåndsliste
+      document.getElementById('floor-svg-left-label').textContent = `Væg + ${fmt(wallGap, 0)} mm`;
+      document.getElementById('floor-svg-net-label').textContent = floorDimMode === '2d'
+        ? `Loft: ${fmt(netWidth, 0)} × ${fmt(netLen, 0)} mm`
+        : `Effektiv bredde: ${fmt(netWidth, 0)} mm`;
+      document.getElementById('floor-svg-right-label').textContent = `${fmt(wallGap, 0)} mm + Væg`;
+
+      renderFloorSVG(netWidth, boardW, symFullBoards, symEdgeWidth, netLen, boardLen, rowASym, { fullUnits: rowBFull, edgeSize: rowBEdge });
+      renderFloorTapeList(wallGap, symEdgeWidth, symFullBoards, boardW);
+    }
+
+    function renderFloorTapeList(wallGap, symEdgeWidth, symFullBoards, boardW) {
+      const listEl = document.getElementById('floor-tape-list');
+      let html = '';
+      let pos = wallGap;
+
+      // Række 1 (Starter)
+      const r1End = pos + symEdgeWidth;
+      html += `
+        <div class="py-1.5 flex items-center justify-between">
+          <span class="text-amber-400 font-semibold">Række #1 (Starter)</span>
+          <span class="text-white font-bold">${fmt(pos, 1)} → ${fmt(r1End, 1)} mm <span class="text-zinc-400 font-normal">(${fmt(symEdgeWidth, 1)} mm)</span></span>
+        </div>
+      `;
+      pos = r1End;
+
+      // Hele rækker
+      const maxShown = Math.min(symFullBoards, 60);
+      for (let i = 0; i < maxShown; i++) {
+        const nextPos = pos + boardW;
+        html += `
+          <div class="py-1.5 flex items-center justify-between">
+            <span class="text-zinc-300 font-semibold">Række #${i + 2} (Hel)</span>
+            <span class="text-amber-400 font-bold">${fmt(nextPos, 1)} mm <span class="text-zinc-500 font-normal">(+${fmt(boardW, 0)})</span></span>
+          </div>
+        `;
+        pos = nextPos;
+      }
+
+      // Slutter række
+      const endPos = pos + symEdgeWidth;
+      html += `
+        <div class="py-1.5 flex items-center justify-between">
+          <span class="text-amber-400 font-semibold">Række #${symFullBoards + 2} (Slutter)</span>
+          <span class="text-emerald-400 font-bold">${fmt(pos, 1)} → ${fmt(endPos, 1)} mm <span class="text-zinc-400 font-normal">(${fmt(symEdgeWidth, 1)} mm)</span></span>
+        </div>
+      `;
+
+      listEl.innerHTML = html;
+    }
+
+    function renderFloorSVG(netWidth, boardW, symFullBoards, symEdgeWidth, netLen, boardLen, rowASym, rowBSym) {
+      const container = document.getElementById('floor-svg-container');
+      if (netWidth <= 0 || boardW <= 0) {
+        container.innerHTML = `<span class="text-xs text-zinc-500">Indtast gyldige mål</span>`;
+        return;
+      }
+
+      const W = 500;
+      const H = floorDimMode === '2d' ? 128 : 74;
+      const pad = 12;
+      const availW = W - pad * 2;
+
+      const maxVisualMiddle = Math.min(symFullBoards, 6);
+      const visualTotalUnits = 2 * symEdgeWidth + maxVisualMiddle * boardW;
+      const scale = availW / Math.max(1, visualTotalUnits);
+
+      const edgePx = Math.max(30, symEdgeWidth * scale);
+      const midTotalPx = availW - 2 * edgePx;
+      const singleMidPx = maxVisualMiddle > 0 ? midTotalPx / maxVisualMiddle : 0;
+
+      // Saml kolonner (rækker på tværs)
+      const cols = [];
+      cols.push({ wPx: edgePx, label: fmt(symEdgeWidth, 0), isEdge: true });
+      for (let i = 0; i < maxVisualMiddle; i++) {
+        const isCollapsed = (symFullBoards > maxVisualMiddle && i === Math.floor(maxVisualMiddle / 2));
+        cols.push({
+          wPx: singleMidPx,
+          label: isCollapsed ? `${symFullBoards}×${fmt(boardW, 0)}` : fmt(boardW, 0),
+          isEdge: false
+        });
+      }
+      cols.push({ wPx: edgePx, label: fmt(symEdgeWidth, 0), isEdge: true });
+
+      let rectsHTML = '';
+      let curX = pad;
+      const topY = 8;
+      const boxH = H - 18;
+
+      cols.forEach((col, colIdx) => {
+        const fillCol = col.isEdge ? '#F59E0B' : '#272A34';
+        const fillOp = col.isEdge ? '0.26' : '1';
+        const strokeCol = col.isEdge ? '#F59E0B' : '#525866';
+
+        rectsHTML += `<rect x="${curX}" y="${topY}" width="${col.wPx}" height="${boxH}" rx="2" fill="${fillCol}" fill-opacity="${fillOp}" stroke="${strokeCol}" stroke-width="${col.isEdge ? 1.8 : 1.2}"/>`;
+
+        // Hvis 2D Troldtekt-mode er aktiv, tegnes tværgående pladesamlinger i forbandt
+        if (floorDimMode === '2d') {
+          const isStaggerRow = (floorBondMode === 'stagger' && colIdx % 2 === 1);
+          const joints = isStaggerRow ? [0.18, 0.5, 0.82] : [0.34, 0.66];
+          joints.forEach(jt => {
+            const jy = topY + boxH * jt;
+            rectsHTML += `<line x1="${curX}" y1="${jy}" x2="${curX + col.wPx}" y2="${jy}" stroke="${col.isEdge ? '#FBBF24' : '#71717A'}" stroke-width="1.2"/>`;
+          });
+        }
+
+        if (col.isEdge) {
+          rectsHTML += `
+            <text x="${curX + col.wPx / 2}" y="${topY + boxH / 2 - 4}" text-anchor="middle" fill="#FBBF24" font-family="JetBrains Mono" font-size="9" font-weight="700">${colIdx === 0 ? 'START' : 'SLUT'}</text>
+            <text x="${curX + col.wPx / 2}" y="${topY + boxH / 2 + 9}" text-anchor="middle" fill="#FFFFFF" font-family="JetBrains Mono" font-size="10" font-weight="700">${col.label}</text>
+          `;
+        } else {
+          rectsHTML += `
+            <text x="${curX + col.wPx / 2}" y="${topY + boxH / 2 + 4}" text-anchor="middle" fill="#E4E4E7" font-family="JetBrains Mono" font-size="9" font-weight="700">${col.label}</text>
+          `;
+        }
+
+        curX += col.wPx;
+      });
+
+      const wallsHTML = `
+        <line x1="6" y1="4" x2="6" y2="${H - 6}" stroke="#EF4444" stroke-width="3" stroke-linecap="round"/>
+        <line x1="${W - 6}" y1="4" x2="${W - 6}" y2="${H - 6}" stroke="#EF4444" stroke-width="3" stroke-linecap="round"/>
+      `;
+
+      container.innerHTML = `
+        <svg viewBox="0 0 ${W} ${H}" class="w-full h-full overflow-visible">
+          ${wallsHTML}
+          ${rectsHTML}
+        </svg>
+      `;
+    }
+
+    function copyFloorResult() {
+      const room = document.getElementById('floor-room').value;
+      const board = document.getElementById('floor-board').value;
+      const edge = document.getElementById('floor-sym-edge').textContent;
+      const full = document.getElementById('floor-sym-full').textContent;
+      let txt = `GULV/LOFT OPDELING (${room} mm bredde, ${board} mm bræt/plade):\n• Starter & Slutter (bredde): ${edge} mm\n• Hele rækker i midten: ${full} stk.`;
+      if (floorDimMode === '2d') {
+        const rowA = document.getElementById('floor-2d-rowA').textContent;
+        const rowB = document.getElementById('floor-2d-rowB').textContent;
+        txt += `\n• På langs (Række 1,3..): ${rowA}\n• På langs (Række 2,4..): ${rowB}`;
+      }
+      copyTextToClipboard(txt, 'Opdeling kopieret');
+    }
+
+
+    // =========================================================================
+    // 2. VÆG, REGLAR & GIPS / FERMACELL (INKL. 50 MM SPARTELKANT)
+    // =========================================================================
+    function setWallPreset(boardW, studCC, trimBevel, minEnd, labelMsg) {
+      document.getElementById('wall-board').value = boardW;
+      document.getElementById('wall-cc').value = studCC;
+      document.getElementById('wall-trim').value = trimBevel;
+      document.getElementById('wall-min-end').value = minEnd;
+      updateBevelToggleButton(trimBevel > 0);
+      calcWall();
+      if (labelMsg) showToast(labelMsg);
+    }
+
+    function syncStudCCWithBoard() {
+      const b = parseFloat(document.getElementById('wall-board').value) || 900;
+      if (b === 900) document.getElementById('wall-cc').value = 450;
+      else if (b === 1200) document.getElementById('wall-cc').value = 600;
+      else if (b === 1220) document.getElementById('wall-cc').value = 610;
+    }
+
+    function toggleBevelCut() {
+      const trimEl = document.getElementById('wall-trim');
+      const cur = parseFloat(trimEl.value) || 0;
+      const next = cur > 0 ? 0 : 50;
+      trimEl.value = next;
+      updateBevelToggleButton(next > 0);
+      calcWall();
+    }
+
+    function updateBevelToggleButton(isActive) {
+      const btn = document.getElementById('wall-bevel-toggle');
+      if (isActive) {
+        btn.textContent = 'AKTIV';
+        btn.className = 'text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-amber-500 text-zinc-950';
+      } else {
+        btn.textContent = 'FRA (0 MM)';
+        btn.className = 'text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400';
+      }
+    }
+
+    function setWallStrategy(strat) {
+      wallStrategy = strat;
+      const stdBtn = document.getElementById('wall-strat-std');
+      const symBtn = document.getElementById('wall-strat-sym');
+      if (strat === 'standard') {
+        stdBtn.className = 'py-2 px-2 rounded-lg text-xs font-bold bg-amber-500 text-zinc-950 transition';
+        symBtn.className = 'py-2 px-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition';
+      } else {
+        symBtn.className = 'py-2 px-2 rounded-lg text-xs font-bold bg-amber-500 text-zinc-950 transition';
+        stdBtn.className = 'py-2 px-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition';
+      }
+      calcWall();
+    }
+
+    function calcWall() {
+      const wallLen = Math.max(200, parseFloat(document.getElementById('wall-len').value) || 0);
+      const boardW = Math.max(100, parseFloat(document.getElementById('wall-board').value) || 900);
+      const studCC = Math.max(100, parseFloat(document.getElementById('wall-cc').value) || 450);
+      const studW = Math.max(20, parseFloat(document.getElementById('wall-stud-w').value) || 45);
+      const trimMm = Math.max(0, parseFloat(document.getElementById('wall-trim').value) || 0);
+      const minEnd = Math.max(50, parseFloat(document.getElementById('wall-min-end').value) || 200);
+
+      updateBevelToggleButton(trimMm > 0);
+
+      // 1) Beregn Standard opstart: 1. plade = boardW - trimMm (f.eks. 900 - 50 = 850 mm)
+      const maxStartBoard = Math.max(50, boardW - trimMm);
+      let stdStart = Math.min(wallLen, maxStartBoard);
+      let remAfterStd = Math.max(0, wallLen - stdStart);
+      let stdFullCount = Math.floor(remAfterStd / boardW);
+      let stdEnd = remAfterStd - stdFullCount * boardW;
+
+      if (stdEnd < 0.05 && stdFullCount > 0) {
+        stdEnd = boardW;
+        stdFullCount -= 1;
+      }
+
+      // 2) Beregn Optimeret / Symmetrisk løsning (hvor starter <= boardW - trimMm, og starter = slutter)
+      let symFullCount = Math.floor(wallLen / boardW);
+      let symEdge = (wallLen - symFullCount * boardW) / 2;
+
+      // Sørg for at symEdge ikke overstiger (boardW - trimMm) og ikke er under minEnd
+      while (symEdge > maxStartBoard) {
+        symFullCount += 1;
+        symEdge = (wallLen - symFullCount * boardW) / 2;
+      }
+      if ((symEdge < minEnd || symEdge <= 0) && symFullCount > 0) {
+        symFullCount -= 1;
+        symEdge = (wallLen - symFullCount * boardW) / 2;
+      }
+
+      // Vælg aktiv løsning ud fra brugerens strategi
+      let startBoard = stdStart;
+      let fullBoards = stdFullCount;
+      let endBoard = stdEnd;
+
+      const alertBox = document.getElementById('wall-narrow-alert');
+      if (wallStrategy === 'standard') {
+        if (stdEnd > 0 && stdEnd < minEnd) {
+          alertBox.classList.remove('hidden');
+          document.getElementById('wall-narrow-alert-text').textContent =
+            `Slutteren bliver kun ${fmt(stdEnd, 0)} mm (under ${fmt(minEnd, 0)} mm!). Skift til Optimeret for at få ${fmt(symEdge, 0)} mm i begge ender.`;
+        } else {
+          alertBox.classList.add('hidden');
+        }
+      } else {
+        alertBox.classList.add('hidden');
+        startBoard = symEdge;
+        fullBoards = symFullCount;
+        endBoard = symEdge;
+      }
+
+      // Opdater nøgletal i UI
+      const cutOffFirst = Math.max(0, boardW - startBoard);
+      document.getElementById('wall-res-start').textContent = fmt(startBoard, 1);
+      document.getElementById('wall-res-start-sub').textContent =
+        cutOffFirst > 0 ? `Skær ${fmt(cutOffFirst, 1)} mm af 1. plade` : `Hel plade (${fmt(boardW, 0)} mm)`;
+
+      document.getElementById('wall-res-full').textContent = fullBoards;
+      document.getElementById('wall-res-full-sub').textContent = `á ${fmt(boardW, 0)} mm`;
+
+      document.getElementById('wall-res-end').textContent = fmt(endBoard, 1);
+      const endEl = document.getElementById('wall-res-end');
+      const endSubEl = document.getElementById('wall-res-end-sub');
+      if (endBoard < minEnd && endBoard > 0) {
+        endEl.className = 'font-mono text-2xl font-extrabold text-rose-400';
+        endSubEl.textContent = `⚠️ Under ${fmt(minEnd, 0)} mm!`;
+        endSubEl.className = 'text-[10px] text-rose-400 block mt-0.5';
+      } else {
+        endEl.className = 'font-mono text-2xl font-extrabold text-emerald-400';
+        endSubEl.textContent = `✓ God bredde`;
+        endSubEl.className = 'text-[10px] text-emerald-400 block mt-0.5';
+      }
+
+      // Opbyg alle pladesamlinger og reglar (stolper) fra 0 til wallLen
+      // Bemærk: Når der skæres (boardW - startBoard) af første plade, rykker ALLE reglar med samme mål,
+      // så modul-afstanden (studCC) passer 100% med både mellemreglar og pladesamlinger!
+      const joints = [];
+      let curJ = startBoard;
+      if (curJ < wallLen - 0.5) joints.push(curJ);
+      for (let i = 0; i < fullBoards; i++) {
+        curJ += boardW;
+        if (curJ < wallLen - 0.5) joints.push(curJ);
+      }
+
+      // Generér reglar (stolper):
+      // Start-regel ved 0 mm, derefter første regel ved (startBoard - studCC) hvis startBoard > studCC,
+      // og derefter fast C-C (studCC) hele vejen hen til slut-reglen!
+      const studs = [];
+      studs.push({ pos: 0, type: 'start', label: 'Start-regel (Væg)' });
+
+      // Find første C-C position ud fra 1. pladesamling (startBoard), så samlinger altid rammer en regel
+      let firstMod = startBoard % studCC;
+      if (firstMod < 40) firstMod += studCC; // Undgå en regel klos op ad start-reglen
+
+      for (let p = firstMod; p < wallLen - 30; p += studCC) {
+        const isJoint = joints.some(j => Math.abs(j - p) < 1.5);
+        studs.push({
+          pos: p,
+          type: isJoint ? 'joint' : 'mid',
+          label: isJoint ? 'Pladesamling' : 'Mellem-regel'
+        });
+      }
+
+      // Sikr at eventuelle pladesamlinger altid er med
+      joints.forEach(jPos => {
+        if (!studs.some(s => Math.abs(s.pos - jPos) < 1.5) && jPos < wallLen - 20) {
+          studs.push({ pos: jPos, type: 'joint', label: 'Pladesamling' });
+        }
+      });
+
+      studs.push({ pos: wallLen, type: 'end', label: 'Slut-regel (Væg)' });
+      studs.sort((a, b) => a.pos - b.pos);
+
+      const secondStud = studs.length > 1 ? studs[1].pos : wallLen;
+      const firstJoint = joints.length > 0 ? joints[0] : wallLen;
+      document.getElementById('wall-first-studs-info').textContent =
+        `Regel #2: ${fmt(secondStud, 0)} mm | 1. Samling: ${fmt(firstJoint, 0)} mm`;
+      document.getElementById('wall-total-studs').textContent = `${studs.length} stk.`;
+      document.getElementById('wall-svg-end-label').textContent = `${fmt(wallLen, 0)} mm`;
+
+      renderWallSVG(wallLen, studs, joints, startBoard, fullBoards, boardW, endBoard, cutOffFirst);
+      renderWallStudList(studs, studW, wallLen);
+    }
+
+    function renderWallSVG(wallLen, studs, joints, startBoard, fullBoards, boardW, endBoard, cutOffFirst) {
+      const container = document.getElementById('wall-svg-container');
+      const W = 500;
+      const H = 104;
+      const pad = 14;
+      const availW = W - pad * 2;
+      const scale = availW / Math.max(1, wallLen);
+
+      let svgContent = '';
+
+      // Tegn pladerne som felter
+      const boards = [];
+      boards.push({ w: startBoard, label: fmt(startBoard, 0), isStart: true });
+      for (let i = 0; i < fullBoards; i++) {
+        boards.push({ w: boardW, label: fmt(boardW, 0), isFull: true });
+      }
+      if (endBoard > 0.5) {
+        boards.push({ w: endBoard, label: fmt(endBoard, 0), isEnd: true });
+      }
+
+      let curX = pad;
+      boards.forEach((b, idx) => {
+        const bw = Math.max(2, b.w * scale);
+        const fill = b.isStart ? '#F59E0B' : (b.isEnd ? '#10B981' : '#272A34');
+        const fillOp = (b.isStart || b.isEnd) ? '0.22' : '0.85';
+        svgContent += `
+          <rect x="${curX}" y="14" width="${bw}" height="64" rx="2" fill="${fill}" fill-opacity="${fillOp}" stroke="#525866" stroke-width="1"/>
+        `;
+        if (bw > 26) {
+          svgContent += `
+            <text x="${curX + bw / 2}" y="49" text-anchor="middle" fill="#FFFFFF" font-family="JetBrains Mono" font-size="10" font-weight="700">${b.label}</text>
+          `;
+        }
+        curX += bw;
+      });
+
+      // Tegn alle reglar (stolper) ovenpå pladerne
+      studs.forEach((s, idx) => {
+        const sx = pad + s.pos * scale;
+        if (s.type === 'start' || s.type === 'end') {
+          svgContent += `<line x1="${sx}" y1="8" x2="${sx}" y2="84" stroke="#EF4444" stroke-width="3.5" stroke-linecap="round"/>`;
+        } else if (s.type === 'joint') {
+          svgContent += `
+            <line x1="${sx}" y1="10" x2="${sx}" y2="82" stroke="#F59E0B" stroke-width="2.5"/>
+            <text x="${sx}" y="96" text-anchor="middle" fill="#FBBF24" font-family="JetBrains Mono" font-size="9" font-weight="700">${fmt(s.pos, 0)}</text>
+          `;
+        } else {
+          svgContent += `
+            <line x1="${sx}" y1="14" x2="${sx}" y2="78" stroke="#A1A1AA" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <text x="${sx}" y="96" text-anchor="middle" fill="#71717A" font-family="JetBrains Mono" font-size="8">${fmt(s.pos, 0)}</text>
+          `;
+        }
+      });
+
+      // Markér afskåret spartelkant i starten hvis aktiv
+      if (cutOffFirst > 0) {
+        svgContent += `
+          <text x="${pad + 4}" y="26" text-anchor="start" fill="#FBBF24" font-family="JetBrains Mono" font-size="8" font-weight="700">✂ -${fmt(cutOffFirst, 0)}mm kant</text>
+        `;
+      }
+
+      container.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="w-full h-full overflow-visible">${svgContent}</svg>`;
+    }
+
+    function renderWallStudList(studs, studW, wallLen) {
+      const listEl = document.getElementById('wall-stud-list');
+      let html = '';
+      const halfStud = studW / 2;
+
+      studs.forEach((s, idx) => {
+        let forkant = s.pos - halfStud;
+        let bagkant = s.pos + halfStud;
+        let centerText = `${fmt(s.pos, 1)} mm`;
+
+        if (s.type === 'start') {
+          forkant = 0;
+          bagkant = studW;
+          centerText = `0 → ${fmt(studW, 0)} mm`;
+        } else if (s.type === 'end') {
+          forkant = Math.max(0, wallLen - studW);
+          bagkant = wallLen;
+          centerText = `${fmt(forkant, 0)} → ${fmt(wallLen, 0)} mm`;
+        }
+
+        const badgeClass = s.type === 'joint'
+          ? 'text-amber-400 font-bold'
+          : (s.type === 'start' || s.type === 'end' ? 'text-emerald-400 font-bold' : 'text-zinc-300');
+
+        html += `
+          <div class="py-1.5 flex items-center justify-between">
+            <div>
+              <span class="text-white font-semibold">Regel #${idx + 1}</span>
+              <span class="text-[11px] ml-1 ${badgeClass}">(${s.label})</span>
+            </div>
+            <div class="text-right">
+              <span class="text-amber-400 font-bold">C-C: ${centerText}</span>
+              ${s.type !== 'start' && s.type !== 'end' ? `<span class="text-zinc-400 text-[11px] block sm:inline sm:ml-2">[Kant: ${fmt(forkant, 1)} - ${fmt(bagkant, 1)}]</span>` : ''}
+            </div>
+          </div>
+        `;
+      });
+
+      listEl.innerHTML = html;
+    }
+
+    function copyWallStudList() {
+      const wallLen = document.getElementById('wall-len').value;
+      const startB = document.getElementById('wall-res-start').textContent;
+      const fullB = document.getElementById('wall-res-full').textContent;
+      const endB = document.getElementById('wall-res-end').textContent;
+      const rows = Array.from(document.querySelectorAll('#wall-stud-list > div')).map(r => r.innerText.replace(/\s+/g, ' ').trim());
+      const txt = `VÆG & REGLAR (${wallLen} mm væg | Starter: ${startB} mm | Hele: ${fullB} stk. | Slutter: ${endB} mm):\n` + rows.join('\n');
+      copyTextToClipboard(txt, 'Regel-liste kopieret');
+    }
+
+    // =========================================================================
+    // 3. LISTER, BEKLÆDNING & HEGN (LIGE MELLEMRUM & C-C MÅL)
+<!-- ... existing code ... -->
+    // Initialiser alle beregninger ved opstart
+    window.onload = function () {
+      calcFloor();
+      calcWall();
+      calcSlats();
+      calcTriangle();
+      calcBattens();
+      calcMaterials();
+    };
+  </script>
+</body>
+</html>
+```
