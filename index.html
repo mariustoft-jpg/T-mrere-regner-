@@ -7,20 +7,20 @@
   <title>TømrerPro - Tømrerens Lommeregner</title>
   <style>
     :root {
-      --bg: #121417;
-      --card: #1e2228;
-      --card-alt: #171a1f;
-      --input-bg: #262b33;
-      --border: #323842;
+      --bg: #0f172a;
+      --card: #1e293b;
+      --card-alt: #0f172a;
+      --input-bg: #0b1120;
+      --border: #334155;
       --accent: #f59e0b;
       --accent-dark: #d97706;
-      --accent-soft: rgba(245, 158, 11, 0.14);
-      --text: #f3f4f6;
-      --text-muted: #9ca3af;
+      --accent-soft: rgba(245, 158, 11, 0.15);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
       --success: #10b981;
-      --success-soft: rgba(16, 185, 129, 0.14);
+      --success-soft: rgba(16, 185, 129, 0.15);
       --danger: #ef4444;
-      --danger-soft: rgba(239, 68, 68, 0.16);
+      --danger-soft: rgba(239, 68, 68, 0.18);
       --radius: 14px;
       --radius-sm: 10px;
       --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -34,6 +34,2309 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.4;
+      padding-bottom: 92px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app-shell {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 0 12px;
+    }
+
+    /* HEADER */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background-color: rgba(15, 23, 42, 0.96);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 0;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .header-inner {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #fbbf24, #d97706);
+      color: #111;
+      font-weight: 900;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    .brand-title span {
+      color: var(--accent);
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .btn-reset {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-reset:active {
+      transform: scale(0.96);
+      background: var(--border);
+    }
+
+    /* MODULE VISIBILITY */
+    .module-sec {
+      display: none;
+      padding-top: 12px;
+    }
+
+    .module-sec.active {
+      display: block;
+    }
+
+    /* CARDS & SECTIONS */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    }
+
+    .card-highlight {
+      background: linear-gradient(160deg, rgba(245, 158, 11, 0.12) 0%, var(--card) 55%);
+      border: 2px solid var(--accent);
+    }
+
+    .sec-label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    /* PRESETS BAR */
+    .preset-scroll {
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+      scrollbar-width: none;
+    }
+
+    .preset-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip {
+      flex-shrink: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 11px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .chip.active-chip,
+    .chip:active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* SEGMENTED TOGGLE */
+    .seg-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px;
+      background: var(--card-alt);
+      padding: 4px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      margin-bottom: 12px;
+    }
+
+    .seg-group.cols-3 {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .seg-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 9px 6px;
+      border-radius: 7px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .seg-btn.active {
+      background: var(--accent);
+      color: #111;
+      font-weight: 800;
+    }
+
+    /* FORM GRID & INPUTS */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .field {
+      margin-bottom: 10px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    .field label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+
+    .field label span.cm-live {
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-weight: 700;
+    }
+
+    .num-box {
+      display: flex;
+      align-items: center;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    .num-box:focus-within {
+      border-color: var(--accent);
+    }
+
+    .step-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: none;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 17px;
+      font-weight: 800;
+      width: 36px;
+      height: 42px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-btn:active {
+      background: var(--accent);
+      color: #111;
+    }
+
+    .num-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 800;
+      text-align: center;
+      height: 42px;
+      outline: none;
+      min-width: 0;
+    }
+
+    .unit-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      padding-right: 6px;
+      user-select: none;
+    }
+
+    /* SLIDER & QUICK BUTTONS FOR CUSTOM STARTER */
+    .starter-control-box {
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      border-radius: var(--radius-sm);
+      padding: 11px;
+      margin-bottom: 10px;
+    }
+
+    .range-slider {
+      width: 100%;
+       accent-color: var(--accent);
+      margin: 8px 0 6px 0;
+      height: 6px;
+      cursor: pointer;
+    }
+
+    .quick-nudge-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+      margin-top: 6px;
+    }
+
+    .nudge-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 2px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .nudge-btn:active {
+      background: var(--accent);
+      color: #111;
+      border-color: var(--accent);
+    }
+
+    .cm-helper-btn {
+      display: block;
+      width: 100%;
+      margin-top: 7px;
+      padding: 7px 10px;
+      background: var(--accent);
+      color: #111;
+      border: none;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    /* CHECKBOX / TOGGLE BAR */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      margin-top: 8px;
+      margin-bottom: 10px;
+    }
+
+    .toggle-info {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .toggle-info small {
+      display: block;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .switch-pill {
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .switch-pill.on {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #111;
+    }
+
+    /* RESULT BOXES */
+    .res-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .res-grid.cols-3 {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .stat-box {
+      background: var(--card-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+    }
+
+    .stat-box.accent-border {
+      border-color: rgba(245, 158, 11, 0.55);
+    }
+
+    .stat-box.green-border {
+      border-color: rgba(16, 185, 129, 0.55);
+    }
+
+    .stat-box.danger-border {
+      border-color: var(--danger);
+      background: rgba(239, 68, 68, 0.08);
+    }
+
+    .stat-title {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 3px;
+      text-transform: uppercase;
+    }
+
+    .stat-val {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--accent);
+      line-height: 1.15;
+    }
+
+    .stat-val.white {
+      color: #fff;
+    }
+
+    .stat-val.green {
+      color: var(--success);
+    }
+
+    .stat-val.red {
+      color: var(--danger);
+    }
+
+    .stat-unit {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .stat-cm {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #cbd5e1;
+      margin-top: 2px;
+    }
+
+    .stat-sub {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ALERT / COMPARE BANNERS */
+    .info-banner {
+      background: var(--card-alt);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 12px;
+      margin-top: 8px;
+      line-height: 1.45;
+    }
+
+    .warn-banner {
+      background: var(--danger-soft);
+      border: 1px solid var(--danger);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #fecaca;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .warn-banner strong {
+      color: #fff;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* SVG CONTAINER */
+    .svg-box {
+      background: #090d16;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    .svg-caption {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    /* TAPE MEASURE LIST */
+    .tape-list {
+      max-height: 260px;
+      overflow-y: auto;
+      background: #090d16;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+
+    .tape-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 11px;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.6);
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .tape-row:last-child {
+      border-bottom: none;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-size: 10px;
+      font-weight: 800;
+      font-family: var(--font-sans);
+      margin-left: 5px;
+    }
+
+    .badge-joint {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .badge-mid {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-muted);
+    }
+
+    .badge-end {
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    /* BOTTOM TAB BAR (5 TABS) */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 60;
+      background: rgba(15, 23, 42, 0.98);
+      border-top: 1px solid var(--border);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .nav-grid {
+      max-width: 520px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      padding: 6px 6px;
+      gap: 3px;
+    }
+
+    .nav-item {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 2px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      gap: 3px;
+    }
+
+    .nav-item svg {
+      width: 19px;
+      height: 19px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      fill: none;
+    }
+
+    .nav-item.active {
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-logo">TP</div>
+        <div>
+          <div class="brand-title">TØMRER<span>PRO</span></div>
+          <div class="brand-sub" id="hdr-subtitle">Troldtekt, Loft & Gulv (Starter → Slutter)</div>
+        </div>
+      </div>
+      <button class="btn-reset" onclick="resetCurrentModule()">Nulstil</button>
+    </div>
+  </header>
+
+  <main class="app-shell">
+
+    <!-- =================================================================
+         TAB 1: GULV, TROLDTEKT & PLADER (STARTER -> SLUTTER & SYMMETRISK)
+         ================================================================= -->
+    <section id="sec-gulv" class="module-sec active">
+      <div class="preset-scroll">
+        <button class="chip active-chip" onclick="applyFloorPreset(this, 1200, 600, 1000, 0, 150)">Troldtekt 600×1200</button>
+        <button class="chip" onclick="applyFloorPreset(this, 2400, 600, 1000, 0, 200)">Troldtekt 600×2400</button>
+        <button class="chip" onclick="applyFloorPreset(this, 190, 1800, 120, 10, 50)">Plankegulv (190 mm)</button>
+        <button class="chip" onclick="applyFloorPreset(this, 1200, 2400, 900, 0, 150)">Gips / Plade 1200</button>
+      </div>
+
+      <div class="card">
+        <!-- 3 Tydelige tilstande -->
+        <div class="seg-group cols-3">
+          <button id="f-mode-custom" class="seg-btn active" onclick="setFloorMode('custom')">Valgfri Starter → Slutter</button>
+          <button id="f-mode-sym" class="seg-btn" onclick="setFloorMode('sym')">Symmetrisk (Start = Slut)</button>
+          <button id="f-mode-2d" class="seg-btn" onclick="setFloorMode('2d')">Komplet 2D Loft</button>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label>
+              <span id="f-lbl-span">Loft / Rum-længde</span>
+              <span id="f-cm-span" class="cm-live">545,0 cm</span>
+            </label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('f-room-w', -50)">−</button>
+              <input id="f-room-w" class="num-input" type="number" inputmode="decimal" value="5450" oninput="calcFloorModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('f-room-w', 50)">+</button>
+            </div>
+            <button id="f-span-cm-btn" class="cm-helper-btn hidden" onclick="convertInputCmToMm('f-room-w')"></button>
+          </div>
+
+          <div class="field">
+            <label>
+              <span id="f-lbl-unit">Plade / Bræt mål</span>
+              <span id="f-cm-unit" class="cm-live">120,0 cm</span>
+            </label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('f-board-w', -50)">−</button>
+              <input id="f-board-w" class="num-input" type="number" inputmode="decimal" value="1200" oninput="calcFloorModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('f-board-w', 50)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- FREMHÆVET BOKS TIL VALGFRI STARTER (f.eks. 100 cm / 1000 mm Troldtekt) -->
+        <div id="f-custom-starter-box" class="starter-control-box">
+          <div class="field" style="margin-bottom: 4px;">
+            <label>
+              <span style="color: #fff; font-size: 12px;">Din Starter-plade (1. plade ved væg)</span>
+              <span id="f-cm-starter" class="cm-live" style="font-size: 12.5px;">100,0 cm</span>
+            </label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('f-custom-start', -10)">−</button>
+              <input id="f-custom-start" class="num-input" type="number" inputmode="decimal" value="1000" oninput="calcFloorModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('f-custom-start', 10)">+</button>
+            </div>
+          </div>
+
+          <!-- Hvis brugeren skriver f.eks. "100" i stedet for "1000" -->
+          <button id="f-starter-cm-btn" class="cm-helper-btn hidden" onclick="convertInputCmToMm('f-custom-start')"></button>
+
+          <input id="f-starter-slider" class="range-slider" type="range" min="50" max="1200" step="5" value="1000" oninput="syncSliderToStarter(this.value)">
+
+          <div class="quick-nudge-row">
+            <button class="nudge-btn" onclick="stepInput('f-custom-start', -50)">−5 cm</button>
+            <button class="nudge-btn" onclick="stepInput('f-custom-start', -10)">−1 cm</button>
+            <button class="nudge-btn" onclick="useSymmetricStarterInCustom()">Symmetrisk</button>
+            <button class="nudge-btn" onclick="stepInput('f-custom-start', 10)">+1 cm</button>
+            <button class="nudge-btn" onclick="stepInput('f-custom-start', 50)">+5 cm</button>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label>Luft ved væg (pr. side)</label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('f-gap', -1)">−</button>
+              <input id="f-gap" class="num-input" type="number" inputmode="decimal" value="0" oninput="calcFloorModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('f-gap', 1)">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Min. ønsket slutter</label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('f-min', -10)">−</button>
+              <input id="f-min" class="num-input" type="number" inputmode="decimal" value="150" oninput="calcFloorModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('f-min', 10)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2D Ekstra felter (Tværgående rækkebredde når 2D er valgt) -->
+        <div id="f-2d-inputs" class="hidden" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);">
+          <div class="sec-label">Tværgående led (Rækkebredde, f.eks. 600 mm Troldtekt)</div>
+          <div class="grid-2">
+            <div class="field">
+              <label>
+                <span>Rum-bredde (tværs)</span>
+                <span id="f-cm-room2" class="cm-live">385,0 cm</span>
+              </label>
+              <div class="num-box">
+                <button class="step-btn" onclick="stepInput('f-room-l', -50)">−</button>
+                <input id="f-room-l" class="num-input" type="number" inputmode="decimal" value="3850" oninput="calcFloorModule()">
+                <span class="unit-tag">mm</span>
+                <button class="step-btn" onclick="stepInput('f-room-l', 50)">+</button>
+              </div>
+            </div>
+            <div class="field">
+              <label>
+                <span>Plade-bredde</span>
+                <span id="f-cm-board2" class="cm-live">60,0 cm</span>
+              </label>
+              <div class="num-box">
+                <button class="step-btn" onclick="stepInput('f-board-l', -50)">−</button>
+                <input id="f-board-l" class="num-input" type="number" inputmode="decimal" value="600" oninput="calcFloorModule()">
+                <span class="unit-tag">mm</span>
+                <button class="step-btn" onclick="stepInput('f-board-l', 50)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HOVED-RESULTATKORT -->
+      <div class="card card-highlight">
+        <div class="sec-label">
+          <span id="f-res-title">Resultat: Række 1 (Med din valgte starter)</span>
+          <span id="f-res-badge" style="color: #fff; font-family: var(--font-mono);">5 plader i rækken</span>
+        </div>
+
+        <div class="res-grid cols-3">
+          <div class="stat-box accent-border">
+            <div class="stat-title">1. Plade (Starter)</div>
+            <div>
+              <span id="f-res-start" class="stat-val">1000</span>
+              <span class="stat-unit">mm</span>
+            </div>
+            <span id="f-res-start-cm" class="stat-cm">100,0 cm</span>
+            <div id="f-res-start-sub" class="stat-sub">Ved startvæg</div>
+          </div>
+
+          <div class="stat-box">
+            <div class="stat-title">Hele plader</div>
+            <div>
+              <span id="f-res-full" class="stat-val white">3</span>
+              <span class="stat-unit">stk.</span>
+            </div>
+            <span id="f-res-full-cm" class="stat-cm">á 120,0 cm</span>
+            <div id="f-res-full-sub" class="stat-sub">3600 mm i alt</div>
+          </div>
+
+          <div id="f-end-card" class="stat-box green-border">
+            <div class="stat-title">Sidste (Slutter)</div>
+            <div>
+              <span id="f-res-end" class="stat-val green">850</span>
+              <span class="stat-unit">mm</span>
+            </div>
+            <span id="f-res-end-cm" class="stat-cm">85,0 cm</span>
+            <div id="f-res-end-sub" class="stat-sub">✓ Over min. krav</div>
+          </div>
+        </div>
+
+        <!-- 1/2 FORBANDT RÆKKE 2 (Forskudte rækker på Troldtekt / Loft) -->
+        <div id="f-stagger-card" style="background: rgba(15,23,42,0.75); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 11px; margin-bottom: 10px;">
+          <div class="sec-label" style="margin-bottom: 8px;">
+            <span>Række 2, 4, 6 (Ved 1/2-Forbandt / Forskudt samling)</span>
+            <span id="f-stagger-offset" style="color: var(--text-muted); font-family: var(--font-mono);">Forskudt 600 mm</span>
+          </div>
+          <div class="res-grid cols-3" style="margin-bottom: 0;">
+            <div class="stat-box">
+              <div class="stat-title">Række 2 Starter</div>
+              <div>
+                <span id="f-r2-start" class="stat-val">400</span>
+                <span class="stat-unit">mm</span>
+              </div>
+              <span id="f-r2-start-cm" class="stat-cm">40,0 cm</span>
+            </div>
+            <div class="stat-box">
+              <div class="stat-title">Hele i Række 2</div>
+              <div>
+                <span id="f-r2-full" class="stat-val white">4</span>
+                <span class="stat-unit">stk.</span>
+              </div>
+              <span id="f-r2-full-cm" class="stat-cm">Hele plader</span>
+            </div>
+            <div class="stat-box">
+              <div class="stat-title">Række 2 Slutter</div>
+              <div>
+                <span id="f-r2-end" class="stat-val green">250</span>
+                <span class="stat-unit">mm</span>
+              </div>
+              <span id="f-r2-end-cm" class="stat-cm">25,0 cm</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sammenligning med Symmetrisk / Alternativer -->
+        <div id="f-compare-banner" class="info-banner"></div>
+
+        <!-- 2D Tværgående Resultat (når Komplet 2D Loft er valgt) -->
+        <div id="f-2d-results" class="hidden" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);">
+          <div class="sec-label">
+            <span>Tværgående Række-inddeling (Bredde)</span>
+            <span id="f-2d-cc" style="color: var(--text); font-family: var(--font-mono);">Forskalling C-C: 600 mm</span>
+          </div>
+          <div class="res-grid">
+            <div class="stat-box">
+              <div class="stat-title">Første & Sidste Række (Bredde)</div>
+              <div>
+                <span id="f-2d-edge" class="stat-val green">425</span>
+                <span class="stat-unit">mm</span>
+              </div>
+              <span id="f-2d-edge-cm" class="stat-cm">42,5 cm</span>
+              <div id="f-2d-edge-sub" class="stat-sub">Symmetriske kantrækker</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-title">Hele rækker i bredden</div>
+              <div>
+                <span id="f-2d-full" class="stat-val white">5</span>
+                <span class="stat-unit">rækker</span>
+              </div>
+              <span id="f-2d-full-cm" class="stat-cm">7 rækker i alt</span>
+              <div class="stat-sub">På tværs af loftet</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visuel SVG Skitse (Række 1 & Række 2 i 1/2-forbandt) -->
+        <div class="svg-box">
+          <div class="svg-caption">
+            <span id="f-svg-left">0 mm (Start)</span>
+            <span id="f-svg-mid">Række 1 & Række 2 (1/2-forbandt)</span>
+            <span id="f-svg-right">5450 mm</span>
+          </div>
+          <div id="f-svg-holder"></div>
+        </div>
+      </div>
+
+      <!-- Målebånds-afsætning -->
+      <div class="card">
+        <div class="sec-label">
+          <span>Målebånds-afsætning (Alle samlinger fra 0 mm)</span>
+          <span style="color: var(--text-muted);">mm & cm</span>
+        </div>
+        <div id="f-tape-list" class="tape-list"></div>
+      </div>
+    </section>
+
+
+    <!-- =================================================================
+         TAB 2: VÆG, REGLAR & GIPS / FERMACELL
+         ================================================================= -->
+    <section id="sec-vaeg" class="module-sec">
+      <div class="preset-scroll">
+        <button class="chip active-chip" onclick="applyWallPreset(this, 900, 450, 50, 200)">Gips 900 (-50mm kant)</button>
+        <button class="chip" onclick="applyWallPreset(this, 1200, 600, 50, 200)">Gips 1200 (-50mm kant)</button>
+        <button class="chip" onclick="applyWallPreset(this, 900, 450, 0, 200)">Fermacell 900 (0mm)</button>
+        <button class="chip" onclick="applyWallPreset(this, 1200, 600, 0, 200)">Fermacell 1200 (0mm)</button>
+        <button class="chip" onclick="applyWallPreset(this, 1220, 610, 0, 200)">Krydsfiner / OSB 1220</button>
+      </div>
+
+      <div class="card">
+        <div class="seg-group cols-3">
+          <button id="w-mode-std" class="seg-btn active" onclick="setWallMode('std')">Standard (-50mm / Hel)</button>
+          <button id="w-mode-opt" class="seg-btn" onclick="setWallMode('opt')">Symmetrisk (Start = Slut)</button>
+          <button id="w-mode-custom" class="seg-btn" onclick="setWallMode('custom')">Valgfri Starter</button>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label>
+              <span>Væglængde i alt</span>
+              <span id="w-cm-len" class="cm-live">385,0 cm</span>
+            </label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('w-len', -10)">−</button>
+              <input id="w-len" class="num-input" type="number" inputmode="decimal" value="3850" oninput="calcWallModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('w-len', 10)">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>
+              <span>Pladebredde</span>
+              <span id="w-cm-board" class="cm-live">90,0 cm</span>
+            </label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('w-board', -50)">−</button>
+              <input id="w-board" class="num-input" type="number" inputmode="decimal" value="900" oninput="calcWallModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('w-board', 50)">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Regel C-C afstand</label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('w-cc', -50)">−</button>
+              <input id="w-cc" class="num-input" type="number" inputmode="decimal" value="450" oninput="calcWallModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('w-cc', 50)">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Regel-tykkelse (Træ/Stål)</label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('w-thick', -5)">−</button>
+              <input id="w-thick" class="num-input" type="number" inputmode="decimal" value="45" oninput="calcWallModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('w-thick', 5)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Valgfri starter på væg -->
+        <div id="w-custom-box" class="starter-control-box hidden" style="margin-top: 8px;">
+          <div class="field">
+            <label>
+              <span style="color:#fff;">Din valgte 1. plade (Starter-bredde)</span>
+              <span id="w-cm-cstart" class="cm-live">60,0 cm</span>
+            </label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('w-custom-start', -10)">−</button>
+              <input id="w-custom-start" class="num-input" type="number" inputmode="decimal" value="600" oninput="calcWallModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('w-custom-start', 10)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Toggle til 50mm spartelkant -->
+        <div class="toggle-row">
+          <div class="toggle-info">
+            Skær spartelkant af 1. plade
+            <small>Rykker automatisk 1. samling og alle reglar med</small>
+          </div>
+          <button id="w-bevel-pill" class="switch-pill on" onclick="toggleBevelCut()">TIL (50 mm)</button>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label>Fratræk spartelkant (mm)</label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('w-bevel', -5)">−</button>
+              <input id="w-bevel" class="num-input" type="number" inputmode="decimal" value="50" oninput="syncBevelPill(); calcWallModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('w-bevel', 5)">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Min. ønsket slutter-plade</label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('w-min-end', -25)">−</button>
+              <input id="w-min-end" class="num-input" type="number" inputmode="decimal" value="200" oninput="calcWallModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('w-min-end', 25)">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resultat Kort -->
+      <div class="card card-highlight">
+        <div class="sec-label">
+          <span id="w-res-heading">Plade- & Regel-inddeling (Standard)</span>
+          <span id="w-stud-total" style="color: #fff; font-family: var(--font-mono);">10 reglar</span>
+        </div>
+
+        <!-- Advarsel ved for smal slutter -->
+        <div id="w-narrow-warn" class="warn-banner hidden">
+          <div>
+            <strong>⚠️ Slutter-pladen bliver for smal!</strong>
+            <span id="w-narrow-text">Slutteren er under minimumskravet.</span>
+          </div>
+          <button class="chip active-chip" onclick="setWallMode('opt')">Brug Symmetrisk</button>
+        </div>
+
+        <div class="res-grid cols-3">
+          <div class="stat-box accent-border">
+            <div class="stat-title">1. Plade (Start)</div>
+            <div>
+              <span id="w-start-val" class="stat-val">850</span>
+              <span class="stat-unit">mm</span>
+            </div>
+            <span id="w-start-cm" class="stat-cm">85,0 cm</span>
+            <div id="w-start-sub" class="stat-sub">900 − 50 mm kant</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-title">Hele plader</div>
+            <div>
+              <span id="w-full-val" class="stat-val white">3</span>
+              <span class="stat-unit">stk.</span>
+            </div>
+            <span id="w-full-cm" class="stat-cm">á 90,0 cm</span>
+            <div id="w-full-sub" class="stat-sub">á 900 mm</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-title">Slutter-plade</div>
+            <div>
+              <span id="w-end-val" class="stat-val green">300</span>
+              <span class="stat-unit">mm</span>
+            </div>
+            <span id="w-end-cm" class="stat-cm">30,0 cm</span>
+            <div id="w-end-sub" class="stat-sub">Sidste plade</div>
+          </div>
+        </div>
+
+        <div id="w-opt-compare" class="info-banner"></div>
+
+        <!-- SVG Tegning af Væg + Reglar + Pladesamlinger -->
+        <div class="svg-box">
+          <div class="svg-caption">
+            <span>0 mm (Start)</span>
+            <span style="color: var(--accent);">Gul = Pladesamling | Grå = Mellemregel</span>
+            <span id="w-svg-len">3850 mm</span>
+          </div>
+          <div id="w-svg-holder"></div>
+        </div>
+      </div>
+
+      <!-- Målebåndsliste for Reglar -->
+      <div class="card">
+        <div class="sec-label">
+          <span>Målebånds-afsætning: Reglar fra 0 mm</span>
+          <span style="color: var(--text-muted); font-weight: 600;">Forkant | C-C | Bagkant</span>
+        </div>
+        <div id="w-tape-list" class="tape-list"></div>
+      </div>
+    </section>
+
+
+    <!-- =================================================================
+         TAB 3: BEKLÆDNING, LISTER & HEGN
+         ================================================================= -->
+    <section id="sec-lister" class="module-sec">
+      <div class="card">
+        <div class="seg-group cols-3">
+          <button id="l-mode-both" class="seg-btn active" onclick="setSlatMode('both')">Bræt i begge ender</button>
+          <button id="l-mode-gap" class="seg-btn" onclick="setSlatMode('gap')">Luft i begge ender</button>
+          <button id="l-mode-cc" class="seg-btn" onclick="setSlatMode('cc')">C-C inddeling</button>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label>Totallængde</label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('l-total', -50); resetCustomSlatCount()">−</button>
+              <input id="l-total" class="num-input" type="number" inputmode="decimal" value="2400" oninput="resetCustomSlatCount(); calcSlatModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('l-total', 50); resetCustomSlatCount()">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Bræt- / Listebredde</label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('l-width', -5); resetCustomSlatCount()">−</button>
+              <input id="l-width" class="num-input" type="number" inputmode="decimal" value="45" oninput="resetCustomSlatCount(); calcSlatModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('l-width', 5); resetCustomSlatCount()">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Ønsket ca. luft / mellemrum</label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('l-target-gap', -2); resetCustomSlatCount()">−</button>
+              <input id="l-target-gap" class="num-input" type="number" inputmode="decimal" value="20" oninput="resetCustomSlatCount(); calcSlatModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('l-target-gap', 2); resetCustomSlatCount()">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Finjuster antal brædder</label>
+            <div class="num-box">
+              <button class="step-btn" onclick="changeSlatCount(-1)" style="width: 33%; font-size: 12px;">−1</button>
+              <button class="step-btn" onclick="resetCustomSlatCount(); calcSlatModule()" style="width: 34%; font-size: 11px; color:#fff; border-left: 1px solid var(--border); border-right: 1px solid var(--border);">Auto</button>
+              <button class="step-btn" onclick="changeSlatCount(1)" style="width: 33%; font-size: 12px;">+1</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-highlight">
+        <div class="sec-label">Præcis Fordeling & Mellemrum</div>
+        <div class="res-grid cols-3">
+          <div class="stat-box accent-border">
+            <div class="stat-title">Præcis luft</div>
+            <div>
+              <span id="l-res-gap" class="stat-val">20,4</span>
+              <span class="stat-unit">mm</span>
+            </div>
+            <div class="stat-sub">Mellem brædder</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-title">Antal brædder</div>
+            <div>
+              <span id="l-res-count" class="stat-val white">37</span>
+              <span class="stat-unit">stk.</span>
+            </div>
+            <div id="l-res-gaps-sub" class="stat-sub">36 mellemrum</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-title">C-C mål</div>
+            <div>
+              <span id="l-res-cc" class="stat-val green">65,4</span>
+              <span class="stat-unit">mm</span>
+            </div>
+            <div class="stat-sub">Gentagelsesmål</div>
+          </div>
+        </div>
+
+        <div class="svg-box">
+          <div class="svg-caption">
+            <span>0 mm</span>
+            <span>Visuel fordeling af lister/brædder</span>
+            <span id="l-svg-end">2400 mm</span>
+          </div>
+          <div id="l-svg-holder"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="sec-label">Målebånds-afsætning (Forkant, Center & Bagkant)</div>
+        <div id="l-tape-list" class="tape-list"></div>
+      </div>
+    </section>
+
+
+    <!-- =================================================================
+         TAB 4: SPÆR & TAG-TREKANT
+         ================================================================= -->
+    <section id="sec-spaer" class="module-sec">
+      <div class="card">
+        <div class="seg-group cols-3">
+          <button id="t-mode-1" class="seg-btn active" onclick="setRoofMode(1)">Grundmål + Grader</button>
+          <button id="t-mode-2" class="seg-btn" onclick="setRoofMode(2)">Grundmål + Højde</button>
+          <button id="t-mode-3" class="seg-btn" onclick="setRoofMode(3)">Spærlængde + Grader</button>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label id="t-lbl-1">Vandret Grundmål (Halv spænd)</label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('t-val-1', -50)">−</button>
+              <input id="t-val-1" class="num-input" type="number" inputmode="decimal" value="3600" oninput="calcRoofModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('t-val-1', 50)">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label id="t-lbl-2">Taghældning (°)</label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('t-val-2', -1)">−</button>
+              <input id="t-val-2" class="num-input" type="number" inputmode="decimal" value="25" oninput="calcRoofModule()">
+              <span id="t-unit-2" class="unit-tag">°</span>
+              <button class="step-btn" onclick="stepInput('t-val-2', 1)">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-highlight">
+        <div class="sec-label">Spærmål & Sav-vinkler (Retvinklet Tag-trekant)</div>
+        <div class="res-grid">
+          <div class="stat-box accent-border">
+            <div class="stat-title">Spærlængde (Skrå)</div>
+            <div>
+              <span id="t-res-rafter" class="stat-val">3972</span>
+              <span class="stat-unit">mm</span>
+            </div>
+            <span id="t-res-rafter-cm" class="stat-cm">397,2 cm</span>
+            <div id="t-res-run-sub" class="stat-sub">Grundmål: 3600 mm</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-title">Kip-højde (Lodret)</div>
+            <div>
+              <span id="t-res-rise" class="stat-val white">1679</span>
+              <span class="stat-unit">mm</span>
+            </div>
+            <span id="t-res-rise-cm" class="stat-cm">167,9 cm</span>
+            <div id="t-res-fall" class="stat-sub">Fald: 466 mm pr. meter</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-title">Lodsnit ved Kip (Savvinkel)</div>
+            <div>
+              <span id="t-res-plumb" class="stat-val green">25,0°</span>
+            </div>
+            <div class="stat-sub">Indstilling på kapsav</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-title">Vandret snit / Fod (rem)</div>
+            <div>
+              <span id="t-res-seat" class="stat-val">65,0°</span>
+            </div>
+            <div class="stat-sub">Mod vandret rem</div>
+          </div>
+        </div>
+
+        <div class="svg-box">
+          <div id="t-svg-holder"></div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =================================================================
+         TAB 5: LÆGTER, STRØER & M² BEREGNER
+         ================================================================= -->
+    <section id="sec-laegter" class="module-sec">
+      <div class="card card-highlight">
+        <div class="sec-label">1. Lægte- & Strø-inddeling (Spærfod til Kip)</div>
+        <div class="grid-2" style="margin-bottom: 10px;">
+          <div class="field">
+            <label>Total Spærlængde</label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('b-rafter', -50)">−</button>
+              <input id="b-rafter" class="num-input" type="number" inputmode="decimal" value="3972" oninput="calcBattenAndAreaModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('b-rafter', 50)">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Maks. lægteafstand (C-C)</label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('b-max-cc', -5)">−</button>
+              <input id="b-max-cc" class="num-input" type="number" inputmode="decimal" value="335" oninput="calcBattenAndAreaModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('b-max-cc', 5)">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Fod til 1. lægte</label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('b-start', -10)">−</button>
+              <input id="b-start" class="num-input" type="number" inputmode="decimal" value="350" oninput="calcBattenAndAreaModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('b-start', 10)">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Kip til øverste lægte</label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('b-top', -5)">−</button>
+              <input id="b-top" class="num-input" type="number" inputmode="decimal" value="40" oninput="calcBattenAndAreaModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('b-top', 5)">+</button>
+            </div>
+          </div>
+        </div>
+        <div id="b-summary" class="info-banner" style="margin-bottom: 10px;"></div>
+        <div id="b-tape-list" class="tape-list"></div>
+      </div>
+
+      <!-- m² og Løbende Meter Beregner -->
+      <div class="card">
+        <div class="sec-label">2. m², Løbende meter (lbm) & Spild</div>
+        <div class="grid-2">
+          <div class="field">
+            <label>Flade-bredde (mm)</label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('m-w', -100)">−</button>
+              <input id="m-w" class="num-input" type="number" inputmode="decimal" value="4200" oninput="calcBattenAndAreaModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('m-w', 100)">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Flade-længde (mm)</label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('m-l', -100)">−</button>
+              <input id="m-l" class="num-input" type="number" inputmode="decimal" value="5450" oninput="calcBattenAndAreaModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('m-l', 100)">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Dækbredde pr. bræt (mm)</label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('m-cov', -5)">−</button>
+              <input id="m-cov" class="num-input" type="number" inputmode="decimal" value="190" oninput="calcBattenAndAreaModule()">
+              <span class="unit-tag">mm</span>
+              <button class="step-btn" onclick="stepInput('m-cov', 5)">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Spild-procent (%)</label>
+            <div class="num-box">
+              <button class="step-btn" onclick="stepInput('m-waste', -1)">−</button>
+              <input id="m-waste" class="num-input" type="number" inputmode="decimal" value="10" oninput="calcBattenAndAreaModule()">
+              <span class="unit-tag">%</span>
+              <button class="step-btn" onclick="stepInput('m-waste', 1)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="res-grid cols-3" style="margin-top: 10px; margin-bottom: 0;">
+          <div class="stat-box">
+            <div class="stat-title">Netto Areal</div>
+            <div><span id="m-res-net" class="stat-val white">22,9</span> <span class="stat-unit">m²</span></div>
+            <div id="m-res-gross" class="stat-sub">Inkl. spild: 25,2 m²</div>
+          </div>
+          <div class="stat-box accent-border">
+            <div class="stat-title">Løbende meter</div>
+            <div><span id="m-res-lbm" class="stat-val">132,6</span> <span class="stat-unit">m</span></div>
+            <div class="stat-sub">Inkl. spild-%</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-title">Længder á 4,2m</div>
+            <div><span id="m-res-pcs" class="stat-val green">32</span> <span class="stat-unit">stk.</span></div>
+            <div id="m-res-pcs-sub" class="stat-sub">Eller 28 stk á 4,8m</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BUND NAVIGATION (5 TABS) -->
+  <nav class="bottom-nav">
+    <div class="nav-grid">
+      <button id="nav-gulv" class="nav-item active" onclick="openModule('gulv')">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+        <span>Loft & Gulv</span>
+      </button>
+      <button id="nav-vaeg" class="nav-item" onclick="openModule('vaeg')">
+        <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="7" y1="4" x2="7" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/><line x1="17" y1="4" x2="17" y2="20"/></svg>
+        <span>Væg & Gips</span>
+      </button>
+      <button id="nav-lister" class="nav-item" onclick="openModule('lister')">
+        <svg viewBox="0 0 24 24"><line x1="4" y1="4" x2="4" y2="20"/><line x1="9" y1="4" x2="9" y2="20"/><line x1="15" y1="4" x2="15" y2="20"/><line x1="20" y1="4" x2="20" y2="20"/></svg>
+        <span>Beklædning</span>
+      </button>
+      <button id="nav-spaer" class="nav-item" onclick="openModule('spaer')">
+        <svg viewBox="0 0 24 24"><polygon points="3 19 21 19 21 5 3 19"/></svg>
+        <span>Spær & Tag</span>
+      </button>
+      <button id="nav-laegter" class="nav-item" onclick="openModule('laegter')">
+        <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        <span>Lægter & m²</span>
+      </button>
+    </div>
+  </nav>
+
+  <script>
+    // GLOBAL STATE
+    let currentModule = 'gulv';
+    let floorMode = 'custom'; // 'custom' | 'sym' | '2d'
+    let wallMode = 'std';     // 'std' | 'opt' | 'custom'
+    let slatMode = 'both';
+    let customSlatCount = null;
+    let roofMode = 1;
+
+    function fmtNum(val, dec = 1) {
+      if (!isFinite(val)) return '0';
+      const rounded = Math.round(val * Math.pow(10, dec)) / Math.pow(10, dec);
+      return rounded.toFixed(dec).replace('.', ',').replace(/,0$/, '');
+    }
+
+    function fmtCm(mmVal) {
+      return fmtNum((mmVal || 0) / 10, 1) + ' cm';
+    }
+
+    function stepInput(id, delta) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const cur = parseFloat(el.value) || 0;
+      el.value = Math.max(0, Math.round((cur + delta) * 100) / 100);
+      el.dispatchEvent(new Event('input'));
+    }
+
+    function convertInputCmToMm(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const cur = parseFloat(el.value) || 0;
+      if (cur > 0) {
+        el.value = Math.round(cur * 10);
+        el.dispatchEvent(new Event('input'));
+      }
+    }
+
+    function openModule(mod) {
+      currentModule = mod;
+      const list = ['gulv', 'vaeg', 'lister', 'spaer', 'laegter'];
+      list.forEach(m => {
+        document.getElementById('sec-' + m).classList.toggle('active', m === mod);
+        document.getElementById('nav-' + m).classList.toggle('active', m === mod);
+      });
+      const titles = {
+        gulv: 'Troldtekt, Loft & Gulv (Starter → Slutter)',
+        vaeg: 'Væg, Reglar & Gips / Fermacell',
+        lister: 'Beklædning, Lister & Hegn',
+        spaer: 'Spær & Tag-trekant',
+        laegter: 'Lægter, Strøer & m² Beregner'
+      };
+      document.getElementById('hdr-subtitle').textContent = titles[mod];
+      window.scrollTo(0, 0);
+    }
+
+    function resetCurrentModule() {
+      if (currentModule === 'gulv') {
+        document.getElementById('f-room-w').value = 5450;
+        document.getElementById('f-board-w').value = 1200;
+        document.getElementById('f-custom-start').value = 1000;
+        document.getElementById('f-gap').value = 0;
+        document.getElementById('f-min').value = 150;
+        document.getElementById('f-room-l').value = 3850;
+        document.getElementById('f-board-l').value = 600;
+        setFloorMode('custom');
+      } else if (currentModule === 'vaeg') {
+        document.getElementById('w-len').value = 3850;
+        document.getElementById('w-board').value = 900;
+        document.getElementById('w-cc').value = 450;
+        document.getElementById('w-thick').value = 45;
+        document.getElementById('w-bevel').value = 50;
+        document.getElementById('w-min-end').value = 200;
+        document.getElementById('w-custom-start').value = 600;
+        syncBevelPill();
+        setWallMode('std');
+      } else if (currentModule === 'lister') {
+        document.getElementById('l-total').value = 2400;
+        document.getElementById('l-width').value = 45;
+        document.getElementById('l-target-gap').value = 20;
+        customSlatCount = null;
+        calcSlatModule();
+      } else if (currentModule === 'spaer') {
+        document.getElementById('t-val-1').value = 3600;
+        document.getElementById('t-val-2').value = 25;
+        setRoofMode(1);
+      } else if (currentModule === 'laegter') {
+        document.getElementById('b-rafter').value = 3972;
+        document.getElementById('b-max-cc').value = 335;
+        document.getElementById('b-start').value = 350;
+        document.getElementById('b-top').value = 40;
+        calcBattenAndAreaModule();
+      }
+    }
+
+    // =========================================================================
+    // TAB 1: GULV, TROLDTEKT & PLADER (INKL. VALGFRI STARTER -> UDREGN SLUTTER)
+    // =========================================================================
+    function applyFloorPreset(btn, unitSpan, crossSpan, defaultStarter, gap, minE) {
+      const parent = btn.parentElement;
+      Array.from(parent.children).forEach(c => c.classList.remove('active-chip'));
+      btn.classList.add('active-chip');
+
+      document.getElementById('f-board-w').value = unitSpan;
+      document.getElementById('f-board-l').value = crossSpan;
+      document.getElementById('f-custom-start').value = defaultStarter;
+      document.getElementById('f-gap').value = gap;
+      document.getElementById('f-min').value = minE;
+      calcFloorModule();
+    }
+
+    function setFloorMode(mode) {
+      floorMode = mode;
+      document.getElementById('f-mode-custom').classList.toggle('active', mode === 'custom');
+      document.getElementById('f-mode-sym').classList.toggle('active', mode === 'sym');
+      document.getElementById('f-mode-2d').classList.toggle('active', mode === '2d');
+
+      // Vis/skjul valgfri starter-boks (synlig i både 'custom' og '2d')
+      document.getElementById('f-custom-starter-box').classList.toggle('hidden', mode === 'sym');
+      document.getElementById('f-2d-inputs').classList.toggle('hidden', mode !== '2d');
+      document.getElementById('f-2d-results').classList.toggle('hidden', mode !== '2d');
+      calcFloorModule();
+    }
+
+    function syncSliderToStarter(val) {
+      document.getElementById('f-custom-start').value = val;
+      calcFloorModule();
+    }
+
+    function useSymmetricStarterInCustom() {
+      const roomW = parseFloat(document.getElementById('f-room-w').value) || 0;
+      const boardW = parseFloat(document.getElementById('f-board-w').value) || 1200;
+      const gap = parseFloat(document.getElementById('f-gap').value) || 0;
+      const minEdge = parseFloat(document.getElementById('f-min').value) || 150;
+      const effW = Math.max(0, roomW - 2 * gap);
+      const sym = solveSymmetricSpan(effW, boardW, minEdge);
+      document.getElementById('f-custom-start').value = Math.round(sym.edge * 10) / 10;
+      calcFloorModule();
+    }
+
+    function solveSymmetricSpan(effSpan, unitW, minEdge) {
+      if (effSpan <= 0 || unitW <= 0) return { full: 0, edge: 0, rawFull: 0, rem: 0, edgeA: 0, edgeB: 0 };
+      const rawFull = Math.floor(effSpan / unitW);
+      const rem = effSpan - rawFull * unitW;
+
+      const edgeA = rem / 2;
+      const edgeB = rawFull > 0 ? (rem + unitW) / 2 : edgeA;
+
+      let chosenFull = rawFull;
+      let chosenEdge = edgeA;
+
+      if (rem < 0.5) {
+        chosenFull = Math.max(0, rawFull - 2);
+        chosenEdge = unitW;
+      } else if (edgeA < minEdge && rawFull > 0) {
+        chosenFull = rawFull - 1;
+        chosenEdge = edgeB;
+      }
+
+      return {
+        full: chosenFull,
+        edge: chosenEdge,
+        rawFull: rawFull,
+        rem: rem,
+        edgeA: edgeA,
+        edgeB: edgeB
+      };
+    }
+
+    function solveGivenStarter(effSpan, unitW, starterW) {
+      if (effSpan <= 0 || unitW <= 0) {
+        return { start: 0, full: 0, end: 0, totalPieces: 0 };
+      }
+      const cleanStart = Math.min(effSpan, Math.max(1, starterW));
+      const remAfterStart = Math.max(0, effSpan - cleanStart);
+
+      let fullCount = Math.floor(remAfterStart / unitW);
+      let endPiece = remAfterStart - fullCount * unitW;
+
+      // Hvis det går 100% lige op med en hel plade til sidst
+      if (endPiece < 0.5 && fullCount > 0) {
+        fullCount = fullCount - 1;
+        endPiece = unitW;
+      }
+
+      const totalPieces = 1 + fullCount + (endPiece > 0.5 ? 1 : 0);
+      return {
+        start: cleanStart,
+        full: fullCount,
+        end: endPiece,
+        totalPieces: totalPieces
+      };
+    }
+
+    function calcFloorModule() {
+      const roomW = parseFloat(document.getElementById('f-room-w').value) || 0;
+      const boardW = parseFloat(document.getElementById('f-board-w').value) || 1200;
+      const customStartRaw = parseFloat(document.getElementById('f-custom-start').value) || 0;
+      const gap = parseFloat(document.getElementById('f-gap').value) || 0;
+      const minEdge = parseFloat(document.getElementById('f-min').value) || 0;
+
+      // Live cm-labels ved inputs
+      document.getElementById('f-cm-span').textContent = fmtCm(roomW);
+      document.getElementById('f-cm-unit').textContent = fmtCm(boardW);
+      document.getElementById('f-cm-starter').textContent = fmtCm(customStartRaw);
+
+      // Opdater slider max til pladelængden
+      const slider = document.getElementById('f-starter-slider');
+      slider.max = Math.max(200, boardW);
+      slider.value = Math.min(boardW, Math.max(10, customStartRaw));
+
+      // Tjek om brugeren har skrevet cm i stedet for mm (f.eks. 100 i stedet for 1000)
+      const starterCmBtn = document.getElementById('f-starter-cm-btn');
+      if (customStartRaw > 0 && customStartRaw <= 150 && customStartRaw * 10 <= boardW) {
+        starterCmBtn.classList.remove('hidden');
+        starterCmBtn.textContent = `💡 Mente du ${fmtNum(customStartRaw, 0)} cm (${fmtNum(customStartRaw * 10, 0)} mm)? Tryk her`;
+      } else {
+        starterCmBtn.classList.add('hidden');
+      }
+
+      const spanCmBtn = document.getElementById('f-span-cm-btn');
+      if (roomW > 0 && roomW <= 999) {
+        spanCmBtn.classList.remove('hidden');
+        spanCmBtn.textContent = `💡 Mente du ${fmtNum(roomW, 0)} cm (${fmtNum(roomW * 10, 0)} mm)? Tryk her`;
+      } else {
+        spanCmBtn.classList.add('hidden');
+      }
+
+      const effW = Math.max(0, roomW - 2 * gap);
+      const symRes = solveSymmetricSpan(effW, boardW, minEdge);
+
+      // Vælg aktiv starter ud fra tilstand
+      const activeStarter = (floorMode === 'sym') ? symRes.edge : Math.min(boardW, Math.max(1, customStartRaw));
+      const row1 = solveGivenStarter(effW, boardW, activeStarter);
+
+      // Opdater overskrift
+      document.getElementById('f-res-title').textContent =
+        floorMode === 'sym'
+          ? 'Resultat: Række 1 (Symmetrisk Start = Slut)'
+          : 'Resultat: Række 1 (Med din valgte starter)';
+      document.getElementById('f-res-badge').textContent = `${row1.totalPieces} stk. i rækken`;
+
+      // Række 1 tal (Starter, Hele, Slutter) i både mm og cm
+      document.getElementById('f-res-start').textContent = fmtNum(row1.start, 1);
+      document.getElementById('f-res-start-cm').textContent = fmtCm(row1.start);
+      document.getElementById('f-res-start-sub').textContent = floorMode === 'sym' ? 'Symmetrisk start' : 'Din starter-plade';
+
+      document.getElementById('f-res-full').textContent = row1.full;
+      document.getElementById('f-res-full-cm').textContent = `á ${fmtCm(boardW)}`;
+      document.getElementById('f-res-full-sub').textContent = `${fmtNum(row1.full * boardW, 0)} mm i alt`;
+
+      document.getElementById('f-res-end').textContent = fmtNum(row1.end, 1);
+      document.getElementById('f-res-end-cm').textContent = fmtCm(row1.end);
+
+      const endCard = document.getElementById('f-end-card');
+      const endValEl = document.getElementById('f-res-end');
+      const endSubEl = document.getElementById('f-res-end-sub');
+
+      if (row1.end >= minEdge) {
+        endCard.className = 'stat-box green-border';
+        endValEl.className = 'stat-val green';
+        endSubEl.textContent = `✓ Over min. (${fmtNum(minEdge, 0)} mm)`;
+        endSubEl.style.color = 'var(--success)';
+      } else {
+        endCard.className = 'stat-box danger-border';
+        endValEl.className = 'stat-val red';
+        endSubEl.textContent = `⚠️ Under min. (${fmtNum(minEdge, 0)} mm)`;
+        endSubEl.style.color = 'var(--danger)';
+      }
+
+      // Beregn Række 2 i 1/2-forbandt (forskudt med 1/2 pladelængde, f.eks. 600 mm)
+      const halfBoard = boardW / 2;
+      let r2Starter = row1.start - halfBoard;
+      if (r2Starter <= 5) {
+        r2Starter = row1.start + halfBoard;
+      }
+      if (r2Starter > boardW) {
+        r2Starter = r2Starter - boardW;
+      }
+      const row2 = solveGivenStarter(effW, boardW, r2Starter);
+
+      document.getElementById('f-stagger-offset').textContent = `Forskudt ${fmtNum(halfBoard, 0)} mm (${fmtCm(halfBoard)})`;
+      document.getElementById('f-r2-start').textContent = fmtNum(row2.start, 1);
+      document.getElementById('f-r2-start-cm').textContent = fmtCm(row2.start);
+      document.getElementById('f-r2-full').textContent = row2.full;
+      document.getElementById('f-r2-full-cm').textContent = `á ${fmtCm(boardW)}`;
+      document.getElementById('f-r2-end').textContent = fmtNum(row2.end, 1);
+      document.getElementById('f-r2-end-cm').textContent = fmtCm(row2.end);
+
+      const r2EndEl = document.getElementById('f-r2-end');
+      r2EndEl.className = row2.end >= minEdge ? 'stat-val green' : 'stat-val red';
+
+      // Info-banner med sammenligning
+      const cmpBanner = document.getElementById('f-compare-banner');
+      if (floorMode !== 'sym') {
+        const fullStartRow = solveGivenStarter(effW, boardW, boardW);
+        cmpBanner.innerHTML =
+          `<strong>Sammenligning på ${fmtNum(effW, 0)} mm (${fmtCm(effW)}):</strong><br>` +
+          `• <strong>Symmetrisk (Start = Slut):</strong> Starter & Slutter = <strong>${fmtNum(symRes.edge, 1)} mm (${fmtCm(symRes.edge)})</strong> med ${symRes.full} hele plader.<br>` +
+          `• <strong>Start med hel plade (${fmtNum(boardW, 0)} mm):</strong> Slutter = <strong>${fmtNum(fullStartRow.end, 1)} mm (${fmtCm(fullStartRow.end)})</strong> (${fullStartRow.full + 1} hele plader).`;
+      } else {
+        cmpBanner.innerHTML =
+          `<strong>Symmetrisk valgmuligheder:</strong><br>` +
+          `• Med <strong>${symRes.rawFull - 1} hele</strong>: Starter = Slutter = <strong>${fmtNum(symRes.edgeB, 1)} mm (${fmtCm(symRes.edgeB)})</strong><br>` +
+          `• Med <strong>${symRes.rawFull} hele</strong>: Starter = Slutter = <strong>${fmtNum(symRes.edgeA, 1)} mm (${fmtCm(symRes.edgeA)})</strong>`;
+      }
+
+      // Hvis 2D tilstand er valgt, udregn tværgående rækkebredde
+      if (floorMode === '2d') {
+        const roomL = parseFloat(document.getElementById('f-room-l').value) || 0;
+        const boardL = parseFloat(document.getElementById('f-board-l').value) || 600;
+        document.getElementById('f-cm-room2').textContent = fmtCm(roomL);
+        document.getElementById('f-cm-board2').textContent = fmtCm(boardL);
+
+        const effCross = Math.max(0, roomL - 2 * gap);
+        const crossSym = solveSymmetricSpan(effCross, boardL, Math.min(minEdge, boardL / 2));
+
+        document.getElementById('f-2d-edge').textContent = fmtNum(crossSym.edge, 1);
+        document.getElementById('f-2d-edge-cm').textContent = fmtCm(crossSym.edge);
+        document.getElementById('f-2d-full').textContent = crossSym.full;
+        document.getElementById('f-2d-full-cm').textContent = `${crossSym.full + 2} rækker i alt`;
+        document.getElementById('f-2d-cc').textContent = `Forskalling C-C: ${Math.round(boardW / 2)} mm`;
+      }
+
+      document.getElementById('f-svg-left').textContent = `0 mm (Luft: ${fmtNum(gap, 0)})`;
+      document.getElementById('f-svg-right').textContent = `${fmtNum(effW, 0)} mm (${fmtCm(effW)})`;
+
+      renderFloorDualSVG(effW, boardW, row1, row2);
+      renderFloorTape(gap, row1, boardW);
+    }
+
+    function renderFloorDualSVG(effW, boardW, row1, row2) {
+      const holder = document.getElementById('f-svg-holder');
+      if (effW <= 0 || boardW <= 0) {
+        holder.innerHTML = '';
+        return;
+      }
+      const W = 400, H = 92, pad = 6;
+      const drawW = W - pad * 2;
+      const scale = drawW / effW;
+
+      function drawRowBars(rowObj, yTop, rowLabel, isRow2) {
+        let g = '';
+        let cx = pad;
+        const pieces = [];
+        if (rowObj.start > 0.5) pieces.push({ w: rowObj.start, type: 'start' });
+        for (let i = 0; i < Math.min(rowObj.full, 12); i++) {
+          pieces.push({ w: boardW, type: 'full' });
+        }
+        if (rowObj.end > 0.5) pieces.push({ w: rowObj.end, type: 'end' });
+
+        pieces.forEach(p => {
+          const pw = Math.max(2, p.w * scale);
+          let fill = '#1e293b', stroke = '#475569', txtCol = '#cbd5e1';
+          if (p.type === 'start') {
+            fill = isRow2 ? 'rgba(245,158,11,0.16)' : 'rgba(245,158,11,0.30)';
+            stroke = '#f59e0b';
+            txtCol = '#fbbf24';
+          } else if (p.type === 'end') {
+            fill = 'rgba(16,185,129,0.25)';
+            stroke = '#10b981';
+            txtCol = '#34d399';
+          }
+          g += `<rect x="${cx}" y="${yTop}" width="${pw}" height="34" rx="3" fill="${fill}" stroke="${stroke}" stroke-width="1.2"/>`;
+          if (pw > 26) {
+            g += `<text x="${cx + pw / 2}" y="${yTop + 21}" text-anchor="middle" fill="${txtCol}" font-family="monospace" font-size="9.5" font-weight="bold">${fmtNum(p.w, 0)}</text>`;
+          }
+          cx += pw;
+        });
+        g += `<text x="${pad + 4}" y="${yTop + 10}" fill="#94a3b8" font-family="sans-serif" font-size="7.5" font-weight="bold">${rowLabel}</text>`;
+        return g;
+      }
+
+      const svgContent =
+        drawRowBars(row1, 6, 'R1', false) +
+        drawRowBars(row2, 48, 'R2 (1/2)', true);
+
+      holder.innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%; height:92px; display:block;">${svgContent}</svg>`;
+    }
+
+    function renderFloorTape(gap, row1, boardW) {
+      const listEl = document.getElementById('f-tape-list');
+      let html = '';
+      let pos = gap + row1.start;
+
+      html += `
+        <div class="tape-row">
+          <span>1. Starter-plade <span class="badge badge-joint">${fmtNum(row1.start, 0)} mm (${fmtCm(row1.start)})</span></span>
+          <strong style="color:var(--accent);">${fmtNum(gap, 0)} → ${fmtNum(pos, 0)} mm</strong>
+        </div>`;
+
+      const limit = Math.min(row1.full, 35);
+      for (let i = 1; i <= limit; i++) {
+        const next = pos + boardW;
+        html += `
+          <div class="tape-row">
+            <span style="color:var(--text-muted);">Plade #${i + 1} (Hel á ${fmtNum(boardW, 0)} mm)</span>
+            <strong>${fmtNum(pos, 0)} → ${fmtNum(next, 0)} mm <span style="color:var(--text-muted); font-size:10.5px;">(${fmtCm(next)})</span></strong>
+          </div>`;
+        pos = next;
+      }
+
+      if (row1.end > 0.5) {
+        const endPos = pos + row1.end;
+        html += `
+          <div class="tape-row">
+            <span>Sidste plade (Slutter) <span class="badge badge-end">${fmtNum(row1.end, 0)} mm (${fmtCm(row1.end)})</span></span>
+            <strong style="color:var(--success);">${fmtNum(pos, 0)} → ${fmtNum(endPos, 0)} mm</strong>
+          </div>`;
+      }
+
+      listEl.innerHTML = html;
+    }
+
+
+    // =========================================================================
+    // TAB 2: VÆG, REGLAR & GIPS / FERMACELL
+    // =========================================================================
+    function applyWallPreset(btn, bw, cc, bevel, minEnd) {
+      const parent = btn.parentElement;
+      Array.from(parent.children).forEach(c => c.classList.remove('active-chip'));
+      btn.classList.add('active-chip');
+
+      document.getElementById('w-board').value = bw;
+      document.getElementById('w-cc').value = cc;
+      document.getElementById('w-bevel').value = bevel;
+      document.getElementById('w-min-end').value = minEnd;
+      syncBevelPill();
+      calcWallModule();
+    }
+
+    function toggleBevelCut() {
+      const bevInput = document.getElementById('w-bevel');
+      const cur = parseFloat(bevInput.value) || 0;
+      bevInput.value = cur > 0 ? 0 : 50;
+      syncBevelPill();
+      calcWallModule();
+    }
+
+    function syncBevelPill() {
+      const bev = parseFloat(document.getElementById('w-bevel').value) || 0;
+      const pill = document.getElementById('w-bevel-pill');
+      if (bev > 0) {
+        pill.classList.add('on');
+        pill.textContent = `TIL (${fmtNum(bev, 0)} mm)`;
+      } else {
+        pill.classList.remove('on');
+        pill.textContent = 'FRA (0 mm)';
+      }
+    }
+
+    function setWallMode(mode) {
+      wallMode = mode;
+      document.getElementById('w-mode-std').classList.toggle('active', mode === 'std');
+      document.getElementById('w-mode-opt').classList.toggle('active', mode === 'opt');
+      document.getElementById('w-mode-custom').classList.toggle('active', mode === 'custom');
+      document.getElementById('w-custom-box').classList.toggle('hidden', mode !== 'custom');
+      calcWallModule();
+    }
+
+    function calcWallModule() {
+      const wallLen = parseFloat(document.getElementById('w-len').value) || 0;
+      const boardW = parseFloat(document.getElementById('w-board').value) || 900;
+      const cc = parseFloat(document.getElementById('w-cc').value) || 450;
+      const studT = parseFloat(document.getElementById('w-thick').value) || 45;
+      const bevel = parseFloat(document.getElementById('w-bevel').value) || 0;
+      const minEnd = parseFloat(document.getElementById('w-min-end').value) || 200;
+      const customWStart = parseFloat(document.getElementById('w-custom-start').value) || 600;
+
+      document.getElementById('w-cm-len').textContent = fmtCm(wallLen);
+      document.getElementById('w-cm-board').textContent = fmtCm(boardW);
+      document.getElementById('w-cm-cstart').textContent = fmtCm(customWStart);
+
+      // 1) Standard opstart: 1. plade = boardW - bevel (fx 900 - 50 = 850 mm)
+      const maxFirstBoard = Math.max(100, boardW - bevel);
+      const stdRow = solveGivenStarter(wallLen, boardW, maxFirstBoard);
+
+      // 2) Optimeret / Symmetrisk opstart
+      let optFull = Math.floor(wallLen / boardW);
+      let optEdge = (wallLen - optFull * boardW) / 2;
+      if (optEdge < minEnd && optFull > 0) {
+        optFull--;
+        optEdge = (wallLen - optFull * boardW) / 2;
+      }
+      while (optEdge > maxFirstBoard) {
+        optFull++;
+        optEdge = (wallLen - optFull * boardW) / 2;
+      }
+
+      // 3) Valgfri starter på væg
+      const custRow = solveGivenStarter(wallLen, boardW, Math.min(boardW, customWStart));
+
+      let activeStart = stdRow.start;
+      let activeFull = stdRow.full;
+      let activeEnd = stdRow.end;
+
+      if (wallMode === 'opt') {
+        activeStart = optEdge;
+        activeFull = optFull;
+        activeEnd = optEdge;
+      } else if (wallMode === 'custom') {
+        activeStart = custRow.start;
+        activeFull = custRow.full;
+        activeEnd = custRow.end;
+      }
+
+      const modeTitles = {
+        std: 'Plade- & Regel-inddeling (Standard)',
+        opt: 'Plade- & Regel-inddeling (Symmetrisk)',
+        custom: 'Plade- & Regel-inddeling (Valgfri Starter)'
+      };
+      document.getElementById('w-res-heading').textContent = modeTitles[wallMode];
+
+      document.getElementById('w-start-val').textContent = fmtNum(activeStart, 1);
+      document.getElementById('w-start-cm').textContent = fmtCm(activeStart);
+      document.getElementById('w-start-sub').textContent =
+        wallMode === 'std'
+          ? (bevel > 0 ? `${fmtNum(boardW, 0)} − ${fmtNum(bevel, 0)} mm kant` : 'Hel plade ved start')
+          : 'Tilpasset starter';
+
+      document.getElementById('w-full-val').textContent = activeFull;
+      document.getElementById('w-full-cm').textContent = `á ${fmtCm(boardW)}`;
+      document.getElementById('w-full-sub').textContent = `á ${fmtNum(boardW, 0)} mm`;
+
+      document.getElementById('w-end-val').textContent = fmtNum(activeEnd > 0.1 ? activeEnd : boardW, 1);
+      document.getElementById('w-end-cm').textContent = fmtCm(activeEnd > 0.1 ? activeEnd : boardW);
+      document.getElementById('w-end-sub').textContent = activeEnd >= minEnd ? '✓ Over min. krav' : '⚠️ Smal slutter';
+
+      const warnBox = document.getElementById('w-narrow-warn');
+      if (activeEnd > 0.5 && activeEnd < minEnd) {
+        warnBox.classList.remove('hidden');
+        document.getElementById('w-narrow-text').textContent =
+          `Slutteren er kun ${fmtNum(activeEnd, 0)} mm (${fmtCm(activeEnd)}) – under min. ${fmtNum(minEnd, 0)} mm.`;
+      } else {
+        warnBox.classList.add('hidden');
+      }
+
+      const cmpBox = document.getElementById('w-opt-compare');
+      if (wallMode !== 'opt') {
+        cmpBox.innerHTML =
+          `<strong>Symmetrisk alternativ:</strong> Starter = Slutter = <strong>${fmtNum(optEdge, 1)} mm (${fmtCm(optEdge)})</strong> og <strong>${optFull} hele plader</strong> imellem.`;
+      } else {
+        cmpBox.innerHTML =
+          `<strong>Standard alternativ:</strong> 1. plade = <strong>${fmtNum(stdRow.start, 0)} mm (${fmtCm(stdRow.start)})</strong>, ${stdRow.full} hele plader, og slutter = <strong>${fmtNum(stdRow.end, 0)} mm (${fmtCm(stdRow.end)})</strong>.`;
+      }
+
+      // Generér Reglar og Pladesamlinger ud fra activeStart og C-C
+      const joints = [];
+      let jPos = activeStart;
+      while (jPos < wallLen - 5) {
+        joints.push(Math.round(jPos * 10) / 10);
+        jPos += boardW;
+      }
+
+      const studs = [];
+      studs.push({ cc: 0, role: 'Startregel', badge: 'badge-end' });
+
+      let firstStudCC = activeStart % cc;
+      if (firstStudCC < 60) firstStudCC += cc;
+
+      for (let p = firstStudCC; p < wallLen - 35; p += cc) {
+        const roundedP = Math.round(p * 10) / 10;
+        const isJoint = joints.some(j => Math.abs(j - roundedP) < 2);
+        const jIdx = joints.findIndex(j => Math.abs(j - roundedP) < 2) + 1;
+        studs.push({
+          cc: roundedP,
+          role: isJoint ? `${jIdx}. Pladesamling` : 'Mellemregel',
+          badge: isJoint ? 'badge-joint' : 'badge-mid',
+          isJoint: isJoint
+        });
+      }
+
+      studs.push({ cc: wallLen, role: 'Slutregel', badge: 'badge-end' });
+
+      document.getElementById('w-stud-total').textContent = `${studs.length} reglar i alt`;
+      document.getElementById('w-svg-len').textContent = `${fmtNum(wallLen, 0)} mm`;
+
+      renderWallSVG(wallLen, activeStart, activeFull, boardW, activeEnd, studs);
+      renderWallStudList(studs, studT, wallLen);
+    }
+
+    function renderWallSVG(wallLen, startW, fullCount, boardW, endW, studs) {
+      const holder = document.getElementById('w-svg-holder');
+      if (wallLen <= 0) {
+        holder.innerHTML = '';
+        return;
+      }
+      const W = 400, H = 80, pad = 6;
+      const drawW = W - pad * 2;
+      const scale = drawW / wallLen;
+
+      let svg = '';
+      let cx = pad;
+      const sPx = startW * scale;
+      svg += `<rect x="${cx}" y="10" width="${sPx}" height="56" fill="rgba(245,158,11,0.18)" stroke="#475569" stroke-width="1"/>`;
+      if (sPx > 26) {
+        svg += `<text x="${cx + sPx / 2}" y="42" text-anchor="middle" fill="#fbbf24" font-family="monospace" font-size="9.5" font-weight="bold">${fmtNum(startW, 0)}</text>`;
+      }
+      cx += sPx;
+
+      for (let i = 0; i < fullCount; i++) {
+        const bPx = boardW * scale;
+        svg += `<rect x="${cx}" y="10" width="${bPx}" height="56" fill="#1e293b" stroke="#475569" stroke-width="1"/>`;
+        if (bPx > 26) {
+          svg += `<text x="${cx + bPx / 2}" y="42" text-anchor="middle" fill="#cbd5e1" font-family="monospace" font-size="9.5">${fmtNum(boardW, 0)}</text>`;
+        }
+        cx += bPx;
+      }
+
+      if (endW > 1) {
+        const ePx = endW * scale;
+        svg += `<rect x="${cx}" y="10" width="${ePx}" height="56" fill="rgba(16,185,129,0.20)" stroke="#475569" stroke-width="1"/>`;
+        if (ePx > 22) {
+          svg += `<text x="${cx + ePx / 2}" y="42" text-anchor="middle" fill="#34d399" font-family="monospace" font-size="9.5" font-weight="bold">${fmtNum(endW, 0)}</text>`;
+        }
+      }
+
+      studs.forEach(st => {
+        const sx = pad + st.cc * scale;
+        if (st.role === 'Startregel' || st.role === 'Slutregel') {
+          svg += `<line x1="${sx}" y1="5" x2="${sx}" y2="72" stroke="#10b981" stroke-width="3"/>`;
+        } else if (st.isJoint) {
+          svg += `<line x1="${sx}" y1="5" x2="${sx}" y2="72" stroke="#f59e0b" stroke-width="2.5"/>`;
+        } else {
+          svg += `<line x1="${sx}" y1="10" x2="${sx}" y2="66" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 3"/>`;
+        }
+      });
+
+      holder.innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%; height:80px; display:block;">${svg}</svg>`;
+    }
+
+    function renderWallStudList(studs, studT, wallLen) {
+      const listEl = document.getElementById('w-tape-list');
+      const halfT = studT / 2;
+      let html = '';
+
+      studs.forEach((st, idx) => {
+        let fk, bk, ccTxt;
+        if (idx === 0) {
+          fk = 0;
+          bk = studT;
+          ccTxt = fmtNum(studT / 2, 0);
+        } else if (idx === studs.length - 1) {
+          fk = Math.max(0, wallLen - studT);
+          bk = wallLen;
+          ccTxt = fmtNum(wallLen, 0);
+        } else {
+          fk = Math.max(0, st.cc - halfT);
+          bk = Math.min(wallLen, st.cc + halfT);
+          ccTxt = fmtNum(st.cc, 0);
+        }
+
+        html += `
+          <div class="tape-row">
+            <div>
+              <strong>#${idx + 1}</strong>
+              <span class="badge ${st.badge}">${st.role}</span>
+            </div>
+            <div>
+              <span style="color:var(--text-muted);">FK:</span> <strong style="color:#fff;">${fmtNum(fk, 0)}</strong>
+              <span style="color:var(--text-muted); margin-left:4px;">| C-C:</span> <strong style="color:var(--accent);">${ccTxt}</strong>
+              <span style="color:var(--text-muted); margin-left:4px;">| BK: ${fmtNum(bk, 0)}</span>
+            </div>
+          </div>`;
+      });
+
+      listEl.innerHTML = html;
+    }
+
+
+    // =========================================================================
+    // TAB 3: BEKLÆDNING, LISTER & HEGN
+    // =========================================================================
+    function setSlatMode(m) {
+      slatMode = m;
+      document.getElementById('l-mode-both').classList.toggle('active', m === 'both');
+      document.getElementById('l-mode-gap').classList.toggle('active', m === 'gap');
+      document.getElementById('l-mode-cc').classList.toggle('active', m === 'cc');
+      customSlatCount = null;
+      calcSlatModule();
+    }
+
+    function resetCustomSlatCount() {
+      customSlatCount = null;
+    }
+
+    function changeSlatCount(delta) {
+      const curShown = parseInt(document.getElementById('l-res-count').textContent) || 2;
+      customSlatCount = Math.max(2, curShown + delta);
+      calcSlatModule();
+    }
+
+    function calcSlatModule() {
+      const total = parseFloat(document.getElementById('l-total').value) || 0;
+      const bw = parseFloat(document.getElementById('l-width').value) || 1;
+      const targetGap = parseFloat(document.getElementById('l-target-gap').value) || 1;
+
+      const pitch = bw + targetGap;
+      let count = customSlatCount;
+
+      if (!count) {
+        if (slatMode === 'both') {
+          count = Math.max(2, Math.round((total - bw) / pitch) + 1);
+        } else if (slatMode === 'gap') {
+          count = Math.max(1, Math.round((total - targetGap) / pitch));
+        } else {
+          count = Math.max(2, Math.round(total / pitch));
+        }
+      }
+
+      let gapCount = count - 1;
+      if (slatMode === 'gap') gapCount = count + 1;
+      if (slatMode === 'cc') gapCount = count;
+
+      const totalWood = count * bw;
+      const exactGap = Math.max(0, (total - totalWood) / Math.max(1, gapCount));
+      const exactCC = bw + exactGap;
+
+      document.getElementById('l-res-gap').textContent = fmtNum(exactGap, 1);
+      document.getElementById('l-res-count').textContent = count;
+      document.getElementById('l-res-gaps-sub').textContent = `${gapCount} mellemrum`;
+      document.getElementById('l-res-cc').textContent = fmtNum(exactCC, 1);
+      document.getElementById('l-svg-end').textContent = `${fmtNum(total, 0)} mm`;
+
+      renderSlatSVG(total, bw, exactGap, count);
+      renderSlatTape(bw, exactGap, count);
+    }
+
+    function renderSlatSVG(total, bw, gap, count) {
+      const holder = document.getElementById('l-svg-holder');
+      if (total <= 0) return;
+      const W = 400, H = 64, pad = 6;
+      const visCount = Math.min(count, 16);
+      const startOff = slatMode === 'gap' ? gap : 0;
+      const spanVis = startOff + visCount * bw + (visCount - 1) * gap + (slatMode === 'gap' ? gap : 0);
+      const scale = (W - pad * 2) / Math.max(1, spanVis);
+
+      let svg = '';
+      let pos = slatMode === 'gap' ? gap : 0;
+      for (let i = 0; i < visCount; i++) {
+        const x = pad + pos * scale;
+        const w = Math.max(4, bw * scale);
+        svg += `<rect x="${x}" y="8" width="${w}" height="48" rx="2" fill="#f59e0b" fill-opacity="0.82" stroke="#fbbf24" stroke-width="1"/>`;
+        pos += bw + gap;
+      }
+      holder.innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%; height:64px; display:block;">${svg}</svg>`;
+    }
+
+    function renderSlatTape(bw, gap, count) {
+      const listEl = document.getElementById('l-tape-list');
+      let html = '';
+      let cur = slatMode === 'gap' ? gap : 0;
+      const limit = Math.min(count, 60);
+
+      for (let i = 1; i <= limit; i++) {
+        const mid = cur + bw / 2;
+        const end = cur + bw;
+        html += `
+          <div class="tape-row">
+            <span>Bræt #${i}</span>
+            <span>FK: <strong style="color:var(--accent);">${fmtNum(cur, 1)}</strong> | C: ${fmtNum(mid, 1)} | BK: <strong>${fmtNum(end, 1)}</strong></span>
+          </div>`;
+        cur = end + gap;
+      }
+      listEl.innerHTML = html;
+    }
+
+
+    // =========================================================================
+    // TAB 4: SPÆR & TAG-TREKANT
+    // =========================================================================
+    function setRoofMode(m) {
+      roofMode = m;
+      document.getElementById('t-mode-1').classList.toggle('active', m === 1);
+      document.getElementById('t-mode-2').classList.toggle('active', m === 2);
+      document.getElementById('t-mode-3').classList.toggle('active', m === 3);
+
+      const lbl1 = document.getElementById('t-lbl-1');
+      const lbl2 = document.getElementById('t-lbl-2');
+      const unit2 = document.getElementById('t-unit-2');
+
+      if (m === 1) {
+        lbl1.textContent = 'Vandret Grundmål (mm)';
+        lbl2.textContent = 'Taghældning (°)';
+        unit2.textContent = '°';
+        document.getElementById('t-val-1').value = 3600;
+        document.getElementById('t-val-2').value = 25;
+      } else if (m === 2) {
+        lbl1.textContent = 'Vandret Grundmål (mm)';
+        lbl2.textContent = 'Lodret Kip-højde (mm)';
+        unit2.textContent = 'mm';
+        document.getElementById('t-val-1').value = 3600;
+        document.getElementById('t-val-2').value = 1679;
+      } else {
+        lbl1.textContent = 'Skrå Spærlængde (mm)';
+        lbl2.textContent = 'Taghældning (°)';
+        unit2.textContent = '°';
+        document.getElementById('t-val-1').value = 3972;
+        document.getElementById('t-val-2').value = 25;
+      }
+      calcRoofModule();
+    }
+
+    function calcRoofModule() {
+      const v1 = parseFloat(document.getElementById('t-val-1').value) || 0;
+      const v2 = parseFloat(document.getElementById('t-val-2').value) || 0;
+
+      let run = 0, rise = 0, rafter = 0, deg = 0;
+
+      if (roofMode === 1) {
+        run = v1;
+        deg = Math.min(85, Math.max(1, v2));
+        const rad = deg * Math.PI / 180;
+        rise = run * Math.tan(rad);
+        rafter = run / Math.cos(rad);
+      } else if (roofMode === 2) {
+        run = Math.max(1, v1);
+        rise = Math.max(1, v2);
+        const rad = Math.atan2(rise, run);
+        deg = rad * 180 / Math.PI;
+        rafter = Math.sqrt(run * run + rise * rise);
+      } else {
+        rafter = v1;
+        deg = Math.min(85, Math.max(1, v2));
+        const rad = deg * Math.PI / 180;
+        run = rafter * Math.cos(rad);
+        rise = rafter * Math.sin(rad);
+      }
+
+      const plumbAngle = deg;
+      const seatAngle = 90 - deg;
+      const fallPerMeter = Math.tan(deg * Math.PI / 180) * 1000;
+
+      document.getElementById('t-res-rafter').textContent = fmtNum(rafter, 0);
+      document.getElementById('t-res-rafter-cm').textContent = fmtCm(rafter);
+      document.getElementById('t-res-run-sub').textContent = `Grundmål: ${fmtNum(run, 0)} mm`;
+      document.getElementById('t-res-rise').textContent = fmtNum(rise, 0);
+      document.getElementById('t-res-rise-cm').textContent = fmtCm(rise);
+      document.getElementById('t-res-fall').textContent = `Fald: ${fmtNum(fallPerMeter, 0)} mm pr. meter`;
+      document.getElementById('t-res-plumb').textContent = `${fmtNum(plumbAngle, 1)}°`;
+      document.getElementById('t-res-seat').textContent = `${fmtNum(seatAngle, 1)}°`;
+
+      renderRoofSVG(run, rise, rafter, deg);
+    }
+
+    function renderRoofSVG(run, rise, rafter, deg) {
+      const holder = document.getElementById('t-svg-holder');
+      const W = 400, H = 110;
+      const x1 = 35, y1 = 92;
+      const x2 = 325, y2 = 92;
+      const ratio = Math.min(0.65, Math.max(0.2, rise / Math.max(1, run)));
+      const yTop = Math.max(16, y1 - (x2 - x1) * ratio);
+
+      holder.innerHTML = `
+        <svg viewBox="0 0 ${W} ${H}" style="width:100%; height:110px; display:block;">
+          <polygon points="${x1},${y1} ${x2},${y1} ${x2},${yTop}" fill="rgba(245,158,11,0.14)" stroke="#f59e0b" stroke-width="2.5"/>
+          <rect x="${x2 - 12}" y="${y1 - 12}" width="12" height="12" fill="none" stroke="#94a3b8" stroke-width="1.2"/>
+          <text x="${(x1 + x2) / 2}" y="${y1 + 14}" text-anchor="middle" fill="#cbd5e1" font-family="monospace" font-size="10.5">Grundmål: ${fmtNum(run, 0)} mm</text>
+          <text x="${x2 + 6}" y="${(y1 + yTop) / 2}" text-anchor="start" fill="#10b981" font-family="monospace" font-size="10.5" font-weight="bold">H: ${fmtNum(rise, 0)}</text>
+          <text x="${(x1 + x2) / 2 - 15}" y="${(y1 + yTop) / 2 - 8}" text-anchor="middle" fill="#fbbf24" font-family="monospace" font-size="10.5" font-weight="bold">Spær: ${fmtNum(rafter, 0)} mm</text>
+          <text x="${x1 + 32}" y="${y1 - 5}" fill="#fff" font-family="monospace" font-size="10">${fmtNum(deg, 1)}°</text>
+        </svg>`;
+    }
+
+
+    // =========================================================================
+    // TAB 5: LÆGTER, STRØER & M² BEREGNER
+    // =========================================================================
+    function calcBattenAndAreaModule() {
+      const rafterLen = parseFloat(document.getElementById('b-rafter').value) || 0;
+      const maxCC = parseFloat(document.getElementById('b-max-cc').value) || 335;
+      const startDist = parseFloat(document.getElementById('b-start').value) || 350;
+      const topOffset = parseFloat(document.getElementById('b-top').value) || 40;
+
+      const span = Math.max(0, rafterLen - startDist - topOffset);
+      const spaces = Math.max(1, Math.ceil(span / Math.max(1, maxCC)));
+      const exactCC = span / spaces;
+
+      document.getElementById('b-summary').innerHTML =
+        `<strong>Lægte-resultat:</strong> ${spaces + 1} lægter med præcis <strong>C-C = ${fmtNum(exactCC, 1)} mm (${fmtCm(exactCC)})</strong> fra ${fmtNum(startDist, 0)} mm ved fod til ${fmtNum(rafterLen - topOffset, 0)} mm ved kip.`;
+
+      const listEl = document.getElementById('b-tape-list');
+      let html = '';
+      for (let i = 0; i <= spaces; i++) {
+        const pos = startDist + i * exactCC;
+        html += `<div class="tape-row"><span>Lægte #${i + 1} ${i === 0 ? '(Fod)' : (i === spaces ? '(Kip)' : '')}</span><strong style="color:var(--accent);">${fmtNum(pos, 0)} mm (${fmtCm(pos)})</strong></div>`;
+      }
+      listEl.innerHTML = html;
+
+      // m² & Løbende meter beregning
+      const mw = parseFloat(document.getElementById('m-w').value) || 0;
+      const ml = parseFloat(document.getElementById('m-l').value) || 0;
+      const cov = parseFloat(document.getElementById('m-cov').value) || 1;
+      const waste = parseFloat(document.getElementById('m-waste').value) || 0;
+
+      const netM2 = (mw * ml) / 1000000;
+      const grossM2 = netM2 * (1 + waste / 100);
+      const totalLbm = (grossM2 * 1000) / cov;
+      const pcs42 = Math.ceil(totalLbm / 4.2);
+      const pcs48 = Math.ceil(totalLbm / 4.8);
+
+      document.getElementById('m-res-net').textContent = fmtNum(netM2, 1);
+      document.getElementById('m-res-gross').textContent = `Inkl. spild: ${fmtNum(grossM2, 1)} m²`;
+      document.getElementById('m-res-lbm').textContent = fmtNum(totalLbm, 1);
+      document.getElementById('m-res-pcs').textContent = pcs42;
+      document.getElementById('m-res-pcs-sub').textContent = `Eller ${pcs48} stk á 4,8m`;
+    }
+
+    // Kør alle beregninger med det samme ved start
+    calcFloorModule();
+    calcWallModule();
+    calcSlatModule();
+    calcRoofModule();
+    calcBattenAndAreaModule();
+  </script>
+</body>
+</html>
+```
     body {
       background-color: var(--bg);
       color: var(--text);
